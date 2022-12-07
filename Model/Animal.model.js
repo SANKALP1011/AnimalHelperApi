@@ -1,21 +1,16 @@
 const express = require("express");
 const moongose = require("mongoose");
 
-const UserModel = new moongose.Schema({
-  UserName: {
+const AnimalSchema = moongose.Schema({
+  AnimalType: {
     type: String,
     required: true,
   },
-  Email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  Password: {
+  AnimalCondition: {
     type: String,
     required: true,
   },
-  location: {
+  AnimalLocation: {
     type: {
       type: String,
       enum: ["Point"],
@@ -26,27 +21,24 @@ const UserModel = new moongose.Schema({
       required: true,
     },
   },
-  City: {
+  UserNamewhoReported: {
     type: String,
-  },
-  Number: {
-    type: Number,
     required: true,
   },
-  InjuredAnimalNearby: [],
-  animalReported: [],
-  isDocter: {
+  hasDocterArrived: {
     default: false,
   },
-  isNgoMember: {
+  isAnimalReported: {
     default: false,
   },
-  hasReportedAnimal: {
+  isCriticalMedicalCareRequired: {
     default: false,
   },
-  isReportedAnimalSaved: {
-    default: true,
+  hasSeriousInjury: {
+    default: false,
+  },
+  isAnimalSaved: {
+    default: false,
   },
 });
-
-module.exports = moongose.model("User", UserModel);
+module.exports = moongose.model("Animal", AnimalSchema);
