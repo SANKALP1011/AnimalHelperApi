@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const moongose = require("mongoose");
 require("dotenv").config({ path: require("find-config")(".env") });
-console.log(process.env.MONGO_URI);
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+const UserRoutes = require("./Routes/User.router");
 
 moongose
   .connect(process.env.MONGO_URI)
@@ -10,6 +12,11 @@ moongose
   .catch((e) => {
     console.log(e);
   });
+
+app.get("/", (req, res) => {
+  res.send("Demo message");
+});
+app.use(UserRoutes);
 
 app.listen("3001", (err) => {
   console.log("Server is up and running");
