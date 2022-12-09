@@ -1,5 +1,6 @@
 const express = require("express");
 const moongose = require("mongoose");
+const geocoder = require("../Middleware/geoCoder.middleware");
 
 const UserModel = new moongose.Schema(
   {
@@ -16,6 +17,10 @@ const UserModel = new moongose.Schema(
       type: String,
       required: true,
     },
+    Address: {
+      type: String,
+      required: [true, "Please add your location for locating injured animal"],
+    },
     location: {
       type: {
         type: String,
@@ -24,8 +29,10 @@ const UserModel = new moongose.Schema(
       },
       coordinates: {
         type: [Number],
+        index: "2dsphere",
         // required: true,
       },
+      formattedAddress: String,
     },
     City: {
       type: String,
@@ -60,5 +67,15 @@ const UserModel = new moongose.Schema(
   },
   { timestamps: true }
 );
+UserModel.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.Address);
+  this.location = {
+    type: ["Point"],
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+  };
+  this.Address = undefined;
+  next();
+});
 
 module.exports = moongose.model("user", UserModel);

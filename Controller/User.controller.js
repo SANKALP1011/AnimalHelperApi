@@ -4,14 +4,18 @@ const User = require("../Model/User.model");
 module.exports = {
   SignUp: async (req, res) => {
     console.log(req.body);
-    const NewuUser = new User({
-      UserName: req.body.UserName,
-      Email: req.body.Email,
-      Password: req.body.Password,
-    });
     try {
-      const saveUser = await NewuUser.save();
-      return res.status(200).json(saveUser);
+      const NewUser = await User.create({
+        UserName: req.body.UserName,
+        Email: req.body.Email,
+        Password: req.body.Password,
+        Address: req.body.Address,
+      });
+      var long = NewUser.location.coordinates[0];
+      var lat = NewUser.location.coordinates[1];
+      var diff = long - lat;
+      console.log(diff);
+      return res.status(200).json(NewUser);
     } catch (e) {
       return res.status(500).json(e);
     }
