@@ -1,7 +1,8 @@
 const express = require("express");
 const moongose = require("mongoose");
+const geocoder = require("../Middleware/geoCoder.middleware");
 
-const AnimalSchema = moongose.Schema({
+const AnimalModel = new moongose.Schema({
   AnimalType: {
     type: String,
     required: true,
@@ -10,35 +11,54 @@ const AnimalSchema = moongose.Schema({
     type: String,
     required: true,
   },
+  AnimalAddress: {
+    type: String,
+    required: true,
+  },
   AnimalLocation: {
     type: {
       type: String,
       enum: ["Point"],
-      required: true,
     },
     coordinates: {
       type: [Number],
-      required: true,
     },
+    formattedAddress: String,
   },
   UserNamewhoReported: {
     type: String,
-    required: true,
+    default: "",
   },
   hasDocterArrived: {
+    type: Boolean,
     default: false,
   },
   isAnimalReported: {
+    type: Boolean,
     default: false,
   },
   isCriticalMedicalCareRequired: {
+    type: Boolean,
     default: false,
   },
   hasSeriousInjury: {
+    type: Boolean,
     default: false,
   },
   isAnimalSaved: {
+    type: Boolean,
     default: false,
   },
 });
-module.exports = moongose.model("Animal", AnimalSchema);
+AnimalModel.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.AnimalAddress);
+  this.AnimalLocation = {
+    type: ["Point"],
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+  };
+  this.AnimalAddress = undefined;
+  next();
+});
+
+module.exports = moongose.model("Animal", AnimalModel);
