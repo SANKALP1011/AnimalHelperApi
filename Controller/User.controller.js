@@ -1,6 +1,24 @@
-const express = require("express");
 const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
+
+const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
+  var R = 6371;
+  var dLat = deg2rad(lat2 - lat1);
+  var dLon = deg2rad(long2 - long1);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var distance = R * c;
+  return distance;
+};
+
+function deg2rad(deg) {
+  return deg * (Math.PI / 180);
+}
 
 module.exports = {
   SignUp: async (req, res) => {
@@ -42,48 +60,39 @@ module.exports = {
     }
   },
   getNearbyAnimal: async (req, res) => {
-    //get all animal list
-    //get the current user details by their id
-    //get the diff between the lat and long of the animal
-    //if diff is greator than 50 than don't show the animal else show the animal
     const userIdQuery = req.query.userId;
-    const CurrentUser = await User.findById({ _id: userIdQuery });
+    const CurrentUser = await User.findById(userIdQuery);
     const animalList = await Animal.find();
-    if (animalList) {
-      for (var i = 0; i < animalList.length; i++) {
-        var AnimalLong = animalList[i].AnimalLocation.coordinates[0];
-        var AnimalLat = animalList[i].AnimalLocation.coordinates[1];
+    var data = [];
+    if (animalList.length) {
+      animalList.forEach(async (value) => {
+        var AnimalLong = value.AnimalLocation.coordinates[0];
+        var AnimalLat = value.AnimalLocation.coordinates[1];
         var userlong = CurrentUser.location.coordinates[0];
         var userLat = CurrentUser.location.coordinates[1];
-        const diffOfLong = AnimalLong - userlong;
-        const diffLat = AnimalLat - userLat;
-        // nested if because of the condition (should be avoided if the situation is good)
-        if (diffOfLong < 0.1 && diffLat < 0.1) {
-          if (
-            animalList[i].AnimalLocation.coordinates[0] == AnimalLong &&
-            animalList[i].AnimalLocation.coordinates[1] == AnimalLat
-          ) {
-            console.log([AnimalLong, AnimalLat]);
-            return res.status(200).json(animalList[i]);
-          }
+        var dist = calculateDistanceUsingLatandLong(
+          //This is hessian function that takes lat and long of two points and use it to calculate the distance between two points.
+          userLat,
+          userlong,
+          AnimalLat,
+          AnimalLong
+        );
+        if (dist < 8) {
+          data.push(value);
         }
-        return res.status(500).json({
-          Message: "No animal nearby",
-        });
-      }
-    } else {
-      return res.status(500).json({
-        Message: "There is no injured animal nearby your area",
       });
     }
+    return res.status(200).json(data); //Return the list of the nearby animals based on user location so that user could save them
   },
   reportInjuredAnimal: async (req, res) => {
+    const userIdQuery = req.query.userId;
+    const CurrentUser = await User.findById(userIdQuery);
     try {
       const reportedAnimal = await Animal.create({
         AnimalType: req.body.AnimalType,
         AnimalCondition: req.body.AnimalCondition,
         AnimalAddress: req.body.AnimalAddress,
-        UserNamewhoReported: findUserById.UserName,
+        UserNamewhoReported: CurrentUser.UserName,
         isAnimalReported: true,
       });
       const updateUserAnimalStatus = await User.findByIdAndUpdate(userIdQuery, {
