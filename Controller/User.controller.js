@@ -110,7 +110,6 @@ module.exports = {
   checkInjuredAnimalStatus: async (req, res) => {
     const userIdQuery = req.query.userId;
     const CurrentUser = await User.findById(userIdQuery);
-    // check using animal and doctor model that the animal is saved , medical attentaion provided , dpcter has arrived etc
     CurrentUser.animalReported.forEach((value) => {
       if (value.isAnimalReported) {
         return res.status(200).json({

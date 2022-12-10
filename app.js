@@ -6,6 +6,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const UserRoutes = require("./Routes/User.router");
 const AnimalRoutes = require("./Routes/Animal.router");
+const DocterRoutes = require("./Routes/Doctor.router");
 
 moongose
   .connect(process.env.MONGO_URI)
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 app.use(UserRoutes);
 app.use(AnimalRoutes);
+app.use(DocterRoutes);
 
 app.listen("3001", (err) => {
   console.log("Server is up and running");
