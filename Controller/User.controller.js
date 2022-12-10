@@ -1,6 +1,6 @@
 const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
-
+/* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
   var R = 6371;
   var dLat = deg2rad(lat2 - lat1);
@@ -77,11 +77,14 @@ module.exports = {
           AnimalLat,
           AnimalLong
         );
-        if (dist < 8) {
+        if (dist < 5) {
           data.push(value);
         }
       });
     }
+    await User.findByIdAndUpdate(userIdQuery, {
+      InjuredAnimalNearby: data,
+    });
     return res.status(200).json(data); //Return the list of the nearby animals based on user location so that user could save them
   },
   reportInjuredAnimal: async (req, res) => {
@@ -103,5 +106,42 @@ module.exports = {
     } catch (e) {
       return res.status(500).json(e);
     }
+  },
+  checkInjuredAnimalStatus: async (req, res) => {
+    const userIdQuery = req.query.userId;
+    const CurrentUser = await User.findById(userIdQuery);
+    // check using animal and doctor model that the animal is saved , medical attentaion provided , dpcter has arrived etc
+    CurrentUser.animalReported.forEach((value) => {
+      if (value.isAnimalReported) {
+        return res.status(200).json({
+          AnimalType: value.AnimalType,
+          AnimalCondition: value.AnimalCondition,
+          Address: value.AnimalLocation.formattedAddress,
+          ReporterName: value.UserNamewhoReported,
+          ReporterAdrress: CurrentUser.location.formattedAddress,
+          Message:
+            "The animal is reported. Waiting for the doctor to arrive at the location to help the animal",
+        });
+      } else if (value.hasDocterArrived && value.isAnimalSaved) {
+        User.findByIdAndUpdate(userIdQuery, {
+          animalReported: [],
+        });
+        return res.status(200).json({
+          Mesaage: "Animal is saved.",
+        });
+      } else if (
+        value.isCriticalMedicalCareRequired &&
+        value.hasSeriousInjury
+      ) {
+        return res.status(200).json({
+          Mesage:
+            "Go the critical section inorder to provide the immediate help to this animal",
+        });
+      } else {
+        return res.status(200).json({
+          Message: "There is no current animal that you have reported",
+        });
+      }
+    });
   },
 };
