@@ -1,5 +1,6 @@
 const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
+
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
   var R = 6371;
@@ -49,6 +50,7 @@ module.exports = {
             "This user does not exist , please try again with the new credentials",
         });
       }
+      console.log(findUser._id);
       const upadtedUserStatus = await User.findByIdAndUpdate(findUser._id, {
         isOnline: true,
       });

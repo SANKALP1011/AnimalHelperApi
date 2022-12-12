@@ -37,6 +37,7 @@ const DocterSchema = new moongose.Schema({
     },
     formattedAddress: String,
   },
+  NearByAnimal: [],
   hasDocterArrivedAtLocation: {
     type: Boolean,
     default: false,
