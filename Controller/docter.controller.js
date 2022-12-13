@@ -81,13 +81,31 @@ module.exports = {
           data.push(value);
           console.log(data.length);
         }
+        if (value.isAnimalSaved) {
+          data.pop();
+        }
       });
     }
     await Docter.findByIdAndUpdate(doctorId, {
       NearByAnimal: data,
     });
-    console.log(CurrentDoctor);
     return res.status(200).json(data);
   },
-  provideAnimalHelp: async (req, res) => {},
+  provideAnimalHelp: async (req, res) => {
+    const doctorId = req.query.docId;
+    const animalId = req.query.aniId;
+    // user would pass animal id as the param to the url from the nearby animal list and then use it to provide cureness to that animals
+    const CurrentDoc = await Docter.findById(doctorId);
+    try {
+      const updateAnimalStatus = await Animal.findByIdAndUpdate(animalId, {
+        hasDocterArrived: true,
+        isAnimalSaved: true,
+        DocterName: CurrentDoc.DocterName,
+      });
+      return res.status(200).json(updateAnimalStatus);
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+    //use animal id and then provide the help to the animal and the animal status so that user could also see that help is provided to the animal or not
+  },
 };

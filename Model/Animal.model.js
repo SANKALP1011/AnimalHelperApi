@@ -33,6 +33,10 @@ const AnimalModel = new moongose.Schema({
     type: Boolean,
     default: false,
   },
+  DocterName: {
+    type: String,
+    default: "",
+  },
   isAnimalReported: {
     type: Boolean,
     default: false,
