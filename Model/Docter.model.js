@@ -50,9 +50,7 @@ const DocterSchema = new moongose.Schema({
     type: Boolean,
     default: false,
   },
-  No_Of_Animal_Saved: {
-    type: Number,
-  },
+  No_Of_Animal_Saved: [],
 });
 DocterSchema.pre("save", async function (next) {
   const loc = await geoCoder.geocode(this.DocterAddress);

@@ -82,7 +82,7 @@ module.exports = {
           console.log(data.length);
         }
         if (value.isAnimalSaved) {
-          data.pop();
+          data.pop(); 
         }
       });
     }
@@ -97,10 +97,14 @@ module.exports = {
     // user would pass animal id as the param to the url from the nearby animal list and then use it to provide cureness to that animals
     const CurrentDoc = await Docter.findById(doctorId);
     try {
+      //once the animal status changes to saved then all those animals would be passed to the save animal list
       const updateAnimalStatus = await Animal.findByIdAndUpdate(animalId, {
         hasDocterArrived: true,
         isAnimalSaved: true,
         DocterName: CurrentDoc.DocterName,
+      });
+      const updateSavedAnimalList = await Docter.findByIdAndUpdate(doctorId, {
+        No_Of_Animal_Saved: updateAnimalStatus,
       });
       return res.status(200).json(updateAnimalStatus);
     } catch (e) {

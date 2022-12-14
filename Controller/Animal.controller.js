@@ -13,5 +13,15 @@ module.exports = {
       return res.status(200).json(addInjAnimal);
     } catch (e) {}
   },
-  getInjuredAnimal: async (req, res) => {},
+  getInjuredAnimalList: async (req, res) => {
+    try {
+      const animalList = await Animal.find();
+      return res.status(200).json(animalList);
+    } catch (e) {
+      return res.status(500).json({
+        Message: "There is no injured animal nearby",
+        Error: e,
+      });
+    }
+  },
 };
