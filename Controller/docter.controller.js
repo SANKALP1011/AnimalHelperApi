@@ -1,7 +1,6 @@
 const express = require("express");
 const Docter = require("../Model/Docter.model");
 const Animal = require("../Model/Animal.model");
-const User = require("../Model/User.model");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -82,7 +81,7 @@ module.exports = {
           console.log(data.length);
         }
         if (value.isAnimalSaved) {
-          data.pop(); 
+          data.pop();
         }
       });
     }

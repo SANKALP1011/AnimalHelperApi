@@ -145,4 +145,8 @@ module.exports = {
       }
     });
   },
+  addUserPetRecord: async (req, res) => {
+    //user can also use the api with the help of the frontend inorder to create their own pet profile , save their pet medical logs and provide the help to pet if they are not feeling good
+    //modify the model and schema accordingly so that pet records can be added in the same existing schema
+  },
 };
