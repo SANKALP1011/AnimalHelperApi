@@ -147,8 +147,6 @@ module.exports = {
     });
   },
   addUserPetRecord: async (req, res) => {
-    //user can also use the api with the help of the frontend inorder to create their own pet profile , save their pet medical logs and provide the help to pet if they are not feeling good
-    //modify the model and schema accordingly so that pet records can be added in the same existing schema
     const userid = req.query.id;
     const CurrentUser = await User.findById(userid);
     try {
@@ -160,6 +158,22 @@ module.exports = {
         PetParentLoation: CurrentUser.location.formattedAddress,
       });
       const newPet = await pet.save();
-    } catch (e) {}
+      if (!CurrentUser.hasPet) {
+        const updatedPetDetails = await User.findByIdAndUpdate(userid, {
+          hasPet: true,
+          PetDetails: newPet,
+        });
+        console.log(updatedPetDetails);
+        return res.status(200).json(updatedPetDetails);
+      } else {
+        return res.status(500).json({
+          Message: CurrentUser.UserName + " has no pet.",
+        });
+      }
+    } catch (e) {
+      return res.status(500).json({
+        Message: e,
+      });
+    }
   },
 };
