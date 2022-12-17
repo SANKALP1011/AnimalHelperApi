@@ -1,5 +1,6 @@
 const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
+const Pet = require("../Model/Pet.modal");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -148,5 +149,17 @@ module.exports = {
   addUserPetRecord: async (req, res) => {
     //user can also use the api with the help of the frontend inorder to create their own pet profile , save their pet medical logs and provide the help to pet if they are not feeling good
     //modify the model and schema accordingly so that pet records can be added in the same existing schema
+    const userid = req.query.id;
+    const CurrentUser = await User.findById(userid);
+    try {
+      const pet = new Pet({
+        Petname: req.body.Petname,
+        Pettype: req.body.Pettype,
+        PetBreed: req.body.PetBreed,
+        PetParent: CurrentUser.UserName,
+        PetParentLoation: CurrentUser.location.formattedAddress,
+      });
+      const newPet = await pet.save();
+    } catch (e) {}
   },
 };

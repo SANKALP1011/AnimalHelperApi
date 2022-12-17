@@ -34,14 +34,15 @@ const UserModel = new moongose.Schema(
       },
       formattedAddress: String,
     },
-    City: {
-      type: String,
-      default: "",
-    },
     Number: {
       type: Number,
       default: "",
     },
+    hasPet: {
+      type: Boolean,
+      default: false,
+    },
+    PetDetails: [],
     isOnline: {
       type: Boolean,
       default: false,
