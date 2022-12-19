@@ -179,12 +179,12 @@ module.exports = {
     //update pet doctor details attribute with the doctor name chosed based on the id
     const userId = req.query.id;
     const CurrentUser = await User.findById(userId);
-    const docterList = await Docter.find();
+    const docId = req.query.did;
     try {
-      const docId = req.query.id;
       const chosenDocterDetails = await Docter.findById(docId);
       CurrentUser.PetDetails.forEach(async (PetData) => {
-        const PetDoctor = await Pet.findByIdAndUpdate(chosenDocterDetails, {
+        const petId = PetData._id.toHexString();
+        const PetDoctor = await Pet.findByIdAndUpdate(petId, {
           Petdoctor: chosenDocterDetails.DocterName,
         });
         return res.status(200).json(PetDoctor);
