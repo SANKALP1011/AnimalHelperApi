@@ -154,26 +154,46 @@ module.exports = {
         Petname: req.body.Petname,
         Pettype: req.body.Pettype,
         PetBreed: req.body.PetBreed,
+        Petage: req.body.Petage,
         PetParent: CurrentUser.UserName,
         PetParentLoation: CurrentUser.location.formattedAddress,
       });
       const newPet = await pet.save();
-      if (!CurrentUser.hasPet) {
-        const updatedPetDetails = await User.findByIdAndUpdate(userid, {
-          hasPet: true,
-          PetDetails: newPet,
-        });
-        console.log(updatedPetDetails);
-        return res.status(200).json(updatedPetDetails);
-      } else {
-        return res.status(500).json({
-          Message: CurrentUser.UserName + " has no pet.",
-        });
-      }
+      const updatedPetDetails = await User.findByIdAndUpdate(userid, {
+        hasPet: true,
+        PetDetails: newPet,
+      });
+      return res.status(200).json(updatedPetDetails);
     } catch (e) {
       return res.status(500).json({
         Message: e,
       });
     }
   },
+  updatePetSickStatus: async (req, res) => {
+    const userId = req.query.id;
+  },
+  // updatePetDetails: async (req, res) => {
+  //   const userId = req.query.id;
+  //   const CurrentUser = await User.findById(userId);
+  //   try {
+  //     const updateDetails = await User.findByIdAndUpdate(petId, {
+  //       Petname: req.body.Petname,
+  //       PetBreed: req.body.PetBreed,
+  //       Pettype: req.body.Pettype,
+  //       Petage: req.body.Petage,
+  //       PetParent: CurrentUser.UserName,
+  //       PetParentLoation: CurrentUser.location.formattedAddress,
+  //     });
+  //     const updatedPetDetails = await User.findByIdAndUpdate(userId, {
+  //       PetDetails: updateDetails,
+  //     });
+  //     console.log(updateDetails);
+  //     return res.status(200).json(updatedPetDetails);
+  //   } catch (e) {
+  //     return res.status(500).json({
+  //       Message: e,
+  //     });
+  //   }
+  // },
 };

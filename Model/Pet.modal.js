@@ -19,6 +19,10 @@ const PetModal = new moongose.Schema({
   PetParentLoation: {
     type: String,
   },
+  PetHealthCardData: {
+    type: Array,
+    default: [],
+  },
   Petdoctor: {
     type: String,
   },
