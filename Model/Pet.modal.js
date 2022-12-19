@@ -25,6 +25,7 @@ const PetModal = new moongose.Schema({
   },
   Petdoctor: {
     type: String,
+    default: "",
   },
   Petage: {
     type: Number,

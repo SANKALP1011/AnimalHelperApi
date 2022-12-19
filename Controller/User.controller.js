@@ -171,29 +171,37 @@ module.exports = {
     }
   },
   updatePetSickStatus: async (req, res) => {
+    // on frontend user clicks on the sick button , adds the reason why the pet might be sick , doctro who regularly checks the pet sees the sick stayus and then prescribes a medicine to the pet
     const userId = req.query.id;
+    const CurrentUser = await User.findById(userId);
+    try {
+      CurrentUser.PetDetails.forEach(async (PetData) => {
+        console.log(PetData.Petdoctor);
+        const petId = PetData._id;
+        if (!PetData.isPetSick) {
+          const pet = await Pet.findByIdAndUpdate(petId, {
+            isPetSick: true,
+          });
+          return res.status(200).json({
+            Message:
+              "You have updated your pet sickness , please wait for some time until your pet doctor " +
+              PetData.Petdoctor +
+              " is availaible.",
+          });
+        }
+        if (PetData.MedicalPresecription != null) {
+          await Pet.findByIdAndUpdate(petId, {
+            isPetSick: false,
+          });
+          return res.status(200).json({
+            Notify: "Your pet " + PetData.Petname + " sick status is changed.",
+          });
+        }
+      });
+    } catch (e) {
+      return res.status(500).json({
+        Message: "No pet details are found.",
+      });
+    }
   },
-  // updatePetDetails: async (req, res) => {
-  //   const userId = req.query.id;
-  //   const CurrentUser = await User.findById(userId);
-  //   try {
-  //     const updateDetails = await User.findByIdAndUpdate(petId, {
-  //       Petname: req.body.Petname,
-  //       PetBreed: req.body.PetBreed,
-  //       Pettype: req.body.Pettype,
-  //       Petage: req.body.Petage,
-  //       PetParent: CurrentUser.UserName,
-  //       PetParentLoation: CurrentUser.location.formattedAddress,
-  //     });
-  //     const updatedPetDetails = await User.findByIdAndUpdate(userId, {
-  //       PetDetails: updateDetails,
-  //     });
-  //     console.log(updateDetails);
-  //     return res.status(200).json(updatedPetDetails);
-  //   } catch (e) {
-  //     return res.status(500).json({
-  //       Message: e,
-  //     });
-  //   }
-  // },
 };

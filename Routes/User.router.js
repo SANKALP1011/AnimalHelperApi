@@ -7,6 +7,7 @@ const {
   getNearbyAnimal,
   checkInjuredAnimalStatus,
   addUserPetRecord,
+  updatePetSickStatus,
 } = require("../Controller/User.controller");
 
 UserRouter.post("/SignUp", SignUp);
@@ -15,4 +16,5 @@ UserRouter.get("/getNearbyAnimal", getNearbyAnimal);
 UserRouter.post("/reportInjuredAnimal", reportInjuredAnimal);
 UserRouter.get("/injuredAnimalStatus", checkInjuredAnimalStatus);
 UserRouter.post("/addPet", addUserPetRecord);
+UserRouter.post("/updatePetStatus", updatePetSickStatus);
 module.exports = UserRouter;
