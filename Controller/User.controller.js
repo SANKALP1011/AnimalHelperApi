@@ -1,6 +1,7 @@
 const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
 const Pet = require("../Model/Pet.modal");
+const Docter = require("../Model/Docter.model");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -168,6 +169,28 @@ module.exports = {
       return res.status(500).json({
         Message: e,
       });
+    }
+  },
+  chosePetDoctor: async (req, res) => {
+    //display list of doctor availaible and show it to the user.
+    //user chose the doctor
+    //pass the id from th frontend to the url route when user clicks on update doctor details
+    //use that id to fetch doctor details
+    //update pet doctor details attribute with the doctor name chosed based on the id
+    const userId = req.query.id;
+    const CurrentUser = await User.findById(userId);
+    const docterList = await Docter.find();
+    try {
+      const docId = req.query.id;
+      const chosenDocterDetails = await Docter.findById(docId);
+      CurrentUser.PetDetails.forEach(async (PetData) => {
+        const PetDoctor = await Pet.findByIdAndUpdate(chosenDocterDetails, {
+          Petdoctor: chosenDocterDetails.DocterName,
+        });
+        return res.status(200).json(PetDoctor);
+      });
+    } catch (e) {
+      return res.status(500).json(e);
     }
   },
   updatePetSickStatus: async (req, res) => {

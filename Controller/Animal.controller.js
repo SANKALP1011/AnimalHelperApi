@@ -2,6 +2,7 @@ const express = require("express");
 const Animal = require("../Model/Animal.model");
 
 module.exports = {
+  /* NOTE -: ANIMAL CONTROLER WOULD HAVE THE MINIMUM FEATURE FOR OBVIOUS REASON */
   addInjuredAnimal: async (req, res) => {
     const addInjAnimal = await Animal.create({
       AnimalType: req.body.AnimalType,
