@@ -126,4 +126,8 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
+  userPetCheckup:async(req,res)=>{
+    //check for the pet to which the doctor is currently looking for
+
+  }
 };
