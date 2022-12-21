@@ -126,8 +126,9 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
-  userPetCheckup:async(req,res)=>{
-    //check for the pet to which the doctor is currently looking for
-
-  }
+  userPetCheckup: async (req, res) => {
+    // get the pet data where the doctor id is their
+    // fetch the data of the doctor with the help of id
+    // get doctro client details
+  },
 };

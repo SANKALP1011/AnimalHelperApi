@@ -26,6 +26,10 @@ const DocterSchema = new moongose.Schema({
   DocterAddress: {
     type: String,
   },
+  PatientPetId: {
+    type: String,
+    default: "",
+  },
   DocterLocation: {
     type: {
       type: String,

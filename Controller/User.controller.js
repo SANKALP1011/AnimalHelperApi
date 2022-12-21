@@ -186,7 +186,15 @@ module.exports = {
         const petId = PetData._id.toHexString();
         const PetDoctor = await Pet.findByIdAndUpdate(petId, {
           Petdoctor: chosenDocterDetails.DocterName,
+          PetDoctorId: chosenDocterDetails._id,
         });
+        const updateDoctorClient = await Docter.findByIdAndUpdate(
+          chosenDocterDetails._id,
+          {
+            PatientPetId: petId,
+          }
+        );
+        console.log(updateDoctorClient);
         return res.status(200).json(PetDoctor);
       });
     } catch (e) {
