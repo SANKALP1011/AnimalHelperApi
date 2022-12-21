@@ -9,6 +9,7 @@ const {
   addUserPetRecord,
   updatePetSickStatus,
   chosePetDoctor,
+  getPetDetails,
 } = require("../Controller/User.controller");
 
 UserRouter.post("/SignUp", SignUp);
@@ -17,6 +18,7 @@ UserRouter.get("/getNearbyAnimal", getNearbyAnimal);
 UserRouter.post("/reportInjuredAnimal", reportInjuredAnimal);
 UserRouter.get("/injuredAnimalStatus", checkInjuredAnimalStatus);
 UserRouter.post("/addPet", addUserPetRecord);
+UserRouter.get("/petDetails", getPetDetails);
 UserRouter.post("/updatePetStatus", updatePetSickStatus);
 UserRouter.post("/choseDoctor", chosePetDoctor);
 module.exports = UserRouter;

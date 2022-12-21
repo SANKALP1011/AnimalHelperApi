@@ -171,6 +171,27 @@ module.exports = {
       });
     }
   },
+  getPetDetails: async (req, res) => {
+    const userId = req.query.id;
+    const CurrentUser = await User.findById(userId);
+    try {
+      if (CurrentUser.PetDetails) {
+        CurrentUser.PetDetails.forEach(async (PetData) => {
+          const petId = PetData._id.toHexString();
+          const UserPet = await Pet.findById(petId);
+          return res.status(200).json(UserPet);
+        });
+      } else {
+        return res.status(200).json({
+          Message: "Currently , you have'nt added any pet in our pet records.",
+        });
+      }
+    } catch (e) {
+      return res.status(500).json({
+        Message: e,
+      });
+    }
+  },
   chosePetDoctor: async (req, res) => {
     //display list of doctor availaible and show it to the user.
     //user chose the doctor
