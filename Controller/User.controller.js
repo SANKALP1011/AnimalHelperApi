@@ -2,6 +2,7 @@ const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
 const Pet = require("../Model/Pet.modal");
 const Docter = require("../Model/Docter.model");
+const { sign } = require("jsonwebtoken");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -33,10 +34,6 @@ module.exports = {
         Password: req.body.Password,
         Address: req.body.Address,
       });
-      var long = NewUser.location.coordinates[0];
-      var lat = NewUser.location.coordinates[1];
-      var diff = long - lat;
-      console.log(diff);
       return res.status(200).json(NewUser);
     } catch (e) {
       return res.status(500).json(e);
@@ -52,11 +49,13 @@ module.exports = {
             "This user does not exist , please try again with the new credentials",
         });
       }
-      console.log(findUser._id);
+      const LogInToken = sign({ Password: findUser }, "ANI1213", {
+        expiresIn: "24h",
+      });
       const upadtedUserStatus = await User.findByIdAndUpdate(findUser._id, {
         isOnline: true,
       });
-      return res.status(200).json(upadtedUserStatus);
+      return res.status(200).json({ upadtedUserStatus, LogInToken });
     } catch (e) {
       return res.status(500).json({
         Message: e,
