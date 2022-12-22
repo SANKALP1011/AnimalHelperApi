@@ -154,6 +154,7 @@ module.exports = {
         Petname: req.body.Petname,
         Pettype: req.body.Pettype,
         PetBreed: req.body.PetBreed,
+        PetParentId: CurrentUser._id,
         Petage: req.body.Petage,
         PetParent: CurrentUser.UserName,
         PetParentLoation: CurrentUser.location.formattedAddress,

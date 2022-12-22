@@ -11,6 +11,7 @@ const {
   chosePetDoctor,
   getPetDetails,
 } = require("../Controller/User.controller");
+const AuthToken = require("../Middleware/authToken.middleware");
 
 UserRouter.post("/SignUp", SignUp);
 UserRouter.get("/LogIn", LogIn);

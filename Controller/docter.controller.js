@@ -118,11 +118,18 @@ module.exports = {
     const userId = req.query.uId;
     const CurrentDoc = await Docter.findById(docId);
     const HealthData = req.body;
+    console.log(HealthData);
     try {
-      const updateData = await User.findByIdAndUpdate(userId, {
-        PetHealthCardData: HealthData,
-      });
-      return res.status(200).json(updateData);
+      // get user then get pet detauls and then pet id and pass that pet id to find the pet and update the heatlt data for the pet
+      if (CurrentDoc.PatientPetId) {
+        const updateData = await Pet.findByIdAndUpdate(
+          CurrentDoc.PatientPetId,
+          {
+            PetHealthCardData: HealthData,
+          }
+        );
+        return res.status(200).json(updateData);
+      }
     } catch (e) {
       return res.status(500).json(e);
     }

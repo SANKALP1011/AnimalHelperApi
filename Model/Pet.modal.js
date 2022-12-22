@@ -8,6 +8,10 @@ const PetModal = new moongose.Schema({
   PetParent: {
     type: String,
   },
+  PetParentId: {
+    type: String,
+    default: "",      
+  },
   Pettype: {
     type: String,
     required: [true, "Please provide the pet type"],
