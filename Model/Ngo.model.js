@@ -1,8 +1,13 @@
 const express = require("express");
 const moongose = require("mongoose");
+const geocoder = require("../Middleware/geoCoder.middleware");
 
 const NgoModal = new moongose.Schema({
   Ngoname: {
+    type: String,
+    default: "",
+  },
+  NgoPassword: {
     type: String,
     default: "",
   },
@@ -13,7 +18,7 @@ const NgoModal = new moongose.Schema({
   StrayAnimalList: [],
   NgoAddress: {
     type: String,
-    required: [true, "Please add your location for locating injured animal"],
+    default: "",
   },
   location: {
     type: {
@@ -29,8 +34,23 @@ const NgoModal = new moongose.Schema({
     formattedAddress: String,
   },
   AnimalsForAdoption: [],
+  isNgo: {
+    type: Boolean,
+    default: false,
+  },
   //pass the data of the adopted animal that are availaile for adoption
   //user can check the list and decide if they want to adopt the animal
   //once the animal is adopted we would the pass the name of the animal to the adopted animal list
   //user too woukld have the adoption attribute through which they would be abke to check the animal that is adopted
 });
+NgoModal.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.NgoAddress);
+  this.location = {
+    type: ["Point"],
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+  };
+  this.NgoAddress = undefined;
+  next();
+});
+module.exports = moongose.model("ngo", NgoModal);
