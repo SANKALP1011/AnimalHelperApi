@@ -1,9 +1,7 @@
 const express = require("express");
-const Animal = require("../Model/Animal.model");
-const User = require("../Model/User.model");
 const Ngo = require("../Model/Ngo.model");
-const Docter = require("../Model/Docter.model");
 const Stray = require("../Model/Stray.model");
+const AdoptedAnimal = require("../Model/AdoptedAnimal.model");
 
 module.exports = {
   NgoSignUp: async (req, res) => {
@@ -46,7 +44,6 @@ module.exports = {
       const StrayData = new Stray({
         StrayName: req.body.StrayName,
         StrType: req.body.StrType,
-        NgoDetails: CurrentNgo,
       });
       console.log(StrayData);
       const stray = await StrayData.save();
@@ -69,7 +66,31 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
-  provideAnimalAdoption: async (req, res) => {},
+  addAnimalforAdoption: async (req, res) => {
+    //add animal for the adoption list
+    //user could check the adoption list where all the animals details would be there along with the ngo name that is providing them for adoption
+    //user would click on the adoption button and adopt the animal by going to the ngo locations
+    //animal is adopted.
+    const ngoId = req.query.id;
+    const CurrentNgo = await Ngo.findById(ngoId);
+    try {
+      const animal = new AdoptedAnimal({
+        Name: req.body.Name,
+        Type: req.body.Type,
+        NgoName: CurrentNgo.Ngoname,
+      });
+      const data = [];
+      const addAnimal = await animal.save();
+      data.push(addAnimal);
+      console.log(data);
+      const updateNgoData = await Ngo.findByIdAndUpdate(ngoId, {
+        AnimalsForAdoption: data,
+      });
+      return res.status(200).json(updateNgoData);
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  },
   getFundforHelpingAnimals: async (req, res) => {},
   strayVaccinationStatus: async (req, res) => {},
 };
