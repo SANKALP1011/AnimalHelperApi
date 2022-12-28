@@ -40,12 +40,15 @@ module.exports = {
   },
   addStrayAnimals: async (req, res) => {
     const data = req.body;
-    console.log(data);
     const ngoId = req.query.id;
     const CurrentNgo = await Ngo.findById(ngoId);
-    console.log(CurrentNgo);
     try {
-      const StrayData = new Stray(data);
+      const StrayData = new Stray({
+        StrayName: req.body.StrayName,
+        StrType: req.body.StrType,
+        NgoDetails: CurrentNgo,
+      });
+      console.log(StrayData);
       const stray = await StrayData.save();
       const updateStrayList = await Ngo.findByIdAndUpdate(ngoId, {
         StrayAnimalList: stray,
@@ -55,7 +58,17 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
-  getListOfAnimals: async (req, res) => {},
+  getListOfAnimals: async (req, res) => {
+    const ngoId = req.query.id;
+    const CurrentNgo = await Ngo.findById(ngoId);
+    try {
+      CurrentNgo.StrayAnimalList.forEach((data) => {
+        return res.status(200).json(data);
+      });
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  },
   provideAnimalAdoption: async (req, res) => {},
   getFundforHelpingAnimals: async (req, res) => {},
   strayVaccinationStatus: async (req, res) => {},
