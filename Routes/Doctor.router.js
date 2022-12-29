@@ -7,6 +7,7 @@ const {
   provideAnimalHelp,
   updatePetHealthCard,
   userPetCheckup,
+  vaccinateStrayAnimals,
 } = require("../Controller/docter.controller");
 
 DocterRouter.post("/docterSignUp", DocterSignUp);
@@ -15,4 +16,5 @@ DocterRouter.get("/nearByAnimal", nearbyAnimal);
 DocterRouter.post("/animalHelp", provideAnimalHelp);
 DocterRouter.post("/updateHealth", updatePetHealthCard);
 DocterRouter.get("/getPatient", userPetCheckup);
+DocterRouter.post("/vaccinateStray", vaccinateStrayAnimals);
 module.exports = DocterRouter;

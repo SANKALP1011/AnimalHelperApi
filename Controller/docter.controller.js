@@ -3,6 +3,7 @@ const Docter = require("../Model/Docter.model");
 const Animal = require("../Model/Animal.model");
 const User = require("../Model/User.model");
 const Pet = require("../Model/Pet.modal");
+const Stray = require("../Model/Stray.model");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -156,6 +157,34 @@ module.exports = {
       return res.status(500).json({
         Message: e,
       });
+    }
+  },
+  vaccinateStrayAnimals: async (req, res) => {
+    const docId = req.query.id;
+    const staryId = req.query.stId;
+    const CurrentDoc = await Docter.findById(docId);
+    const stray = await Stray.findById(staryId);
+    try {
+      if (!stray.isVaccinated) {
+        const updateVaccination = await Stray.findByIdAndUpdate(staryId, {
+          isVaccinated: true,
+        });
+        return res.status(200).json({
+          Message:
+            "Stray animal with the name " +
+            stray.StrayName +
+            " is vaccinated and safe now.",
+        });
+      } else {
+        return res.status(500).json({
+          Message:
+            "Stray animal with the name " +
+            stray.StrayName +
+            " is already vaccinated and safe.",
+        });
+      }
+    } catch (e) {
+      return res.status(500).json(e);
     }
   },
 };
