@@ -159,10 +159,14 @@ module.exports = {
         PetParent: CurrentUser.UserName,
         PetParentLoation: CurrentUser.location.formattedAddress,
       });
+      const data = [];
       const newPet = await pet.save();
+      const pushValue = data.push(newPet);
       const updatedPetDetails = await User.findByIdAndUpdate(userid, {
         hasPet: true,
-        PetDetails: newPet,
+        $push: {
+          PetDetails: data,
+        },
       });
       return res.status(200).json(updatedPetDetails);
     } catch (e) {
