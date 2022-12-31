@@ -165,9 +165,15 @@ module.exports = {
     const CurrentDoc = await Docter.findById(docId);
     const stray = await Stray.findById(staryId);
     try {
+      const docData = {
+        DocName: CurrentDoc.DocterName,
+        DocNo: CurrentDoc.DocterNumber,
+        DocterLocation: CurrentDoc.DocterLocation.formattedAddress,
+      };
       if (!stray.isVaccinated) {
         const updateVaccination = await Stray.findByIdAndUpdate(staryId, {
           isVaccinated: true,
+          CurrentDoctor: docData,
         });
         return res.status(200).json({
           Message:
