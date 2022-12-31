@@ -36,8 +36,9 @@ const NgoModal = new moongose.Schema({
   AnimalsForAdoption: [],
   isNgo: {
     type: Boolean,
-    default: false,
+    default: true,
   },
+  VaccinatedAnimals: [],
   //pass the data of the adopted animal that are availaile for adoption
   //user can check the list and decide if they want to adopt the animal
   //once the animal is adopted we would the pass the name of the animal to the adopted animal list

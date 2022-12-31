@@ -37,18 +37,27 @@ module.exports = {
     }
   },
   addStrayAnimals: async (req, res) => {
-    const data = req.body;
     const ngoId = req.query.id;
     const CurrentNgo = await Ngo.findById(ngoId);
     try {
+      const NgoData = {
+        NgoName: CurrentNgo.Ngoname,
+        NgoPhn: CurrentNgo.NgoPhno,
+        NgoLocation: CurrentNgo.location.formattedAddress,
+      };
       const StrayData = new Stray({
         StrayName: req.body.StrayName,
         StrType: req.body.StrType,
+        NgoDetails: NgoData,
       });
-      console.log(StrayData);
       const stray = await StrayData.save();
+      const strList = [];
+      const pushData = strList.push(stray);
+      console.log(strList);
       const updateStrayList = await Ngo.findByIdAndUpdate(ngoId, {
-        StrayAnimalList: stray,
+        $push: {
+          StrayAnimalList: strList,
+        },
       });
       return res.status(200).json(updateStrayList);
     } catch (e) {
@@ -82,9 +91,10 @@ module.exports = {
       const data = [];
       const addAnimal = await animal.save();
       data.push(addAnimal);
-      console.log(data);
       const updateNgoData = await Ngo.findByIdAndUpdate(ngoId, {
-        AnimalsForAdoption: data,
+        $push: {
+          AnimalsForAdoption: data,
+        },
       });
       return res.status(200).json(updateNgoData);
     } catch (e) {
@@ -100,6 +110,25 @@ module.exports = {
     // entire payment process would protected with the help of stripe paymnet for the prirecxted payment portal
   },
   strayVaccinationStatus: async (req, res) => {
-    
+    //get vaccinated animals list
+    //check if the isVacc = true and if it is true then add it to the the vaccinated animals array
+    const ngoId = req.query.id;
+    const strayId = req.query.stId;
+    const CurrentNgo = await Ngo.findById(ngoId);
+    const stray = await Stray.findById(strayId);
+    try {
+      const data = [];
+      if (stray.isVaccinated) {
+        data.push(stray);
+        const updateVacciantedList = await Ngo.findByIdAndUpdate(ngoId, {
+          VaccinatedAnimals: data,
+        });
+        return res.status(200).json(data);
+      } else {
+        return res.status(200).json({
+          Message: "Currently , no stray animal is vaccianted",
+        });
+      }
+    } catch (e) {}
   },
 };
