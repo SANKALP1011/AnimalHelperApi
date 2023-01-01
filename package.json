@@ -20,6 +20,7 @@
     "mongoose-geojson-schema": "^2.2.3",
     "mysql": "^2.18.1",
     "node-geocoder": "^4.2.0",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "stripe": "^11.5.0"
   }
 }
