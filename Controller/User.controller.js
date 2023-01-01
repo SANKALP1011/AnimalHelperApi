@@ -2,7 +2,9 @@ const User = require("../Model/User.model");
 const Animal = require("../Model/Animal.model");
 const Pet = require("../Model/Pet.modal");
 const Docter = require("../Model/Docter.model");
+const Ngo = require("../Model/Ngo.model");
 const { sign } = require("jsonwebtoken");
+const PaymentGateway = require("../Middleware/payment.middleware");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -258,6 +260,50 @@ module.exports = {
       return res.status(500).json({
         Message: "No pet details are found.",
       });
+    }
+  },
+  donateFundsToNgo: async (req, res) => {
+    const userId = req.query.id;
+    const ngoId = req.query.nId;
+    const CurrentUser = await User.findById(userId);
+    const ngo = await Ngo.findById(ngoId);
+    try {
+      //user would get the list of the ngo
+      //user would decide the ngo where they want to provide funds (update the schema here, user would contain the lst of ngo where they have donated)
+      //using id of that particular ngo would pass to the frontend using useparams
+      //using id , user would provide the fund to that particular ngo account
+      const userData = {
+        Amount: req.body.Amount,
+        Name: CurrentUser.UserName,
+        Address: CurrentUser.location.formattedAddress,
+      };
+      const ngoData = {
+        Ngoname: ngo.Ngoname,
+        NgoAddress: ngo.location.formattedAddress,
+        NgoPhn: ngo.NgoPhno,
+        Amount: "500",
+      };
+      console.log(userData);
+      console.log(ngoData);
+      const amount = Number(userData.Amount);
+      await PaymentGateway("Payment for the animal rescue", ngo.Ngoname, amount)
+        .then((result) => {
+          return res.status(200).json({
+            Success:
+              "Your donation of amount " +
+              amount +
+              " is successfull to the the ngo " +
+              ngo.Ngoname +
+              " . Thank you for your help.",
+          });
+        })
+        .catch((e) => {
+          return res.status(500).json(e);
+        });
+      //call the functin of the payment and pass the parameters
+      //once the payment is done , pass the success respone
+    } catch (e) {
+      return res.status(500).json(e);
     }
   },
 };
