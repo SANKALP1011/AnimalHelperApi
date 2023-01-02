@@ -286,8 +286,16 @@ module.exports = {
       console.log(userData);
       console.log(ngoData);
       const amount = Number(userData.Amount);
+      const data = [];
+      data.push(ngoData);
       await PaymentGateway("Payment for the animal rescue", ngo.Ngoname, amount)
-        .then((result) => {
+        .then(async (result) => {
+          const updateDonatedNgoList = await User.findByIdAndUpdate(userId, {
+            $push: {
+              donatedtoNgo: data,
+            },
+          });
+          console.log(updateDonatedNgoList);
           return res.status(200).json({
             Success:
               "Your donation of amount " +
@@ -302,6 +310,18 @@ module.exports = {
         });
       //call the functin of the payment and pass the parameters
       //once the payment is done , pass the success respone
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  },
+  getDonatedNgoList: async (req, res) => {
+    const userId = req.query.id;
+    const CurrentUser = await User.findById(userId);
+    try {
+      CurrentUser.donatedtoNgo.forEach((value) => {
+        console.log(value);
+        return res.status(200).json(value);
+      });
     } catch (e) {
       return res.status(500).json(e);
     }
