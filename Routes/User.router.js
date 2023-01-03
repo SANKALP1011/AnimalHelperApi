@@ -12,6 +12,7 @@ const {
   getPetDetails,
   donateFundsToNgo,
   getDonatedNgoList,
+  adoptAnimal,
 } = require("../Controller/User.controller");
 const AuthToken = require("../Middleware/authToken.middleware");
 
@@ -26,4 +27,5 @@ UserRouter.post("/updatePetStatus", updatePetSickStatus);
 UserRouter.post("/choseDoctor", chosePetDoctor);
 UserRouter.post("/ngoFund", donateFundsToNgo);
 UserRouter.get("/donatedNgoList", getDonatedNgoList);
+UserRouter.post("/adoptAnimal", adoptAnimal);
 module.exports = UserRouter;
