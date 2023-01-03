@@ -359,4 +359,13 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
+  getAdoptedAnimal: async (req, res) => {
+    const userId = req.query.id;
+    const CurrentUser = await User.findById(userId);
+    try {
+      return res.status(200).json(CurrentUser.AdoptedAnimal);
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  },
 };

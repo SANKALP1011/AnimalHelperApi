@@ -129,6 +129,8 @@ module.exports = {
           Message: "Currently , no stray animal is vaccianted",
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      return res.status(500).json(e);
+    }
   },
 };
