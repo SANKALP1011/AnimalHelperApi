@@ -5,6 +5,7 @@ const Docter = require("../Model/Docter.model");
 const Ngo = require("../Model/Ngo.model");
 const { sign } = require("jsonwebtoken");
 const PaymentGateway = require("../Middleware/payment.middleware");
+const AdoptedAnimal = require("../Model/AdoptedAnimal.model");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -322,6 +323,38 @@ module.exports = {
         console.log(value);
         return res.status(200).json(value);
       });
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  },
+  adoptAnimal: async (req, res) => {
+    const userId = req.query.id;
+    const aniId = req.query.nId;
+    const CurrentUser = await User.findById(userId);
+    const Animal = await AdoptedAnimal.findById(aniId);
+    try {
+      console.log(CurrentUser._id);
+      const upadateAdopterId = await AdoptedAnimal.findByIdAndUpdate(aniId, {
+        AdopterId: CurrentUser._id.toHexString(),
+        isAdopted: true,
+        AdopterName: CurrentUser.UserName,
+      });
+      const AnimalData = {
+        Name: Animal.Name,
+        NgoName: Animal.NgoName,
+        Type: Animal.Type,
+        AdopoterId: Animal.AdopterId,
+      };
+      console.log(AnimalData);
+      const data = [];
+      data.push(AnimalData);
+      const updateUserAdoptedArray = await User.findByIdAndUpdate(userId, {
+        $push: {
+          AdoptedAnimal: data,
+        },
+      });
+      console.log(updateUserAdoptedArray);
+      return await res.status(200).json(CurrentUser.AdoptedAnimal);
     } catch (e) {
       return res.status(500).json(e);
     }

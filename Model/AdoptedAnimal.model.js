@@ -26,6 +26,14 @@ const AdoptedAnimalModel = new moongose.Schema({
     type: Boolean,
     default: false,
   },
+  AdopterId: {
+    type: String,
+    default: "", //would pass the user id that have adopted the animal
+  },
+  isAdopted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = moongose.model("adoptedAnimal", AdoptedAnimalModel);

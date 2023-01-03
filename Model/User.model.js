@@ -66,6 +66,7 @@ const UserModel = new moongose.Schema(
       default: false,
     },
     donatedtoNgo: [], // pass the ngo name , location , amount here from the dponated ngo data
+    AdoptedAnimal: [],
   },
   { timestamps: true }
 );
