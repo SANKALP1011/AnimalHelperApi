@@ -101,14 +101,6 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
-  getFundforHelpingAnimals: async (req, res) => {
-    // get animal that need help
-    // ask for donation for those animals which could be used for treating those animal , providing them with food and better health conditions etc
-    // user could check on frontend which animal are psited by the ngo for the help
-    // they would click on the donate button
-    // once clicked they would be able to donate for those animals
-    // entire payment process would protected with the help of stripe paymnet for the prirecxted payment portal
-  },
   strayVaccinationStatus: async (req, res) => {
     //get vaccinated animals list
     //check if the isVacc = true and if it is true then add it to the the vaccinated animals array
