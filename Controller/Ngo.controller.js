@@ -44,6 +44,7 @@ module.exports = {
         NgoName: CurrentNgo.Ngoname,
         NgoPhn: CurrentNgo.NgoPhno,
         NgoLocation: CurrentNgo.location.formattedAddress,
+        NgoId: CurrentNgo._id,
       };
       const StrayData = new Stray({
         StrayName: req.body.StrayName,
@@ -101,26 +102,12 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
-  strayVaccinationStatus: async (req, res) => {
-    //get vaccinated animals list
-    //check if the isVacc = true and if it is true then add it to the the vaccinated animals array
+  getVaccinatedDetails: async (req, res) => {
     const ngoId = req.query.id;
-    const strayId = req.query.stId;
     const CurrentNgo = await Ngo.findById(ngoId);
-    const stray = await Stray.findById(strayId);
     try {
-      const data = [];
-      if (stray.isVaccinated) {
-        data.push(stray);
-        const updateVacciantedList = await Ngo.findByIdAndUpdate(ngoId, {
-          VaccinatedAnimals: data,
-        });
-        return res.status(200).json(data);
-      } else {
-        return res.status(200).json({
-          Message: "Currently , no stray animal is vaccianted",
-        });
-      }
+      console.log(CurrentNgo.VaccinatedAnimals);
+      return res.status(200).json(CurrentNgo.VaccinatedAnimals);
     } catch (e) {
       return res.status(500).json(e);
     }
