@@ -171,16 +171,20 @@ module.exports = {
         DocNo: CurrentDoc.DocterNumber,
         DocterLocation: CurrentDoc.DocterLocation.formattedAddress,
       };
+      console.log(docData);
       if (!stray.isVaccinated) {
         const updateVaccination = await Stray.findByIdAndUpdate(staryId, {
-          isVaccinated: true,
-          CurrentDoctor: docData,
+          $set: {
+            isVaccinated: true,
+            CurrentDoctor: docData,
+          },
         });
         console.log(updateVaccination);
         const data = [];
-        data.push(updateVaccination);
+        data.push(stray);
         stray.NgoDetails.forEach(async (value) => {
-          await Ngo.findByIdAndUpdate(value.NgoId.toHexString(), {
+          const id = value.NgoId.toHexString();
+          await Ngo.findByIdAndUpdate(id, {
             $push: {
               VaccinatedAnimals: data,
             },
@@ -193,6 +197,8 @@ module.exports = {
             " is vaccinated and safe now.",
         });
       } else {
+        console.log(stray);
+        console.log(stray.isVaccinated);
         return res.status(500).json({
           Message:
             "Stray animal with the name " +

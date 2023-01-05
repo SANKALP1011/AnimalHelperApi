@@ -106,6 +106,7 @@ module.exports = {
     const ngoId = req.query.id;
     const CurrentNgo = await Ngo.findById(ngoId);
     try {
+      console.log(CurrentNgo.VaccinatedAnimals);
       return res.status(200).json(CurrentNgo.VaccinatedAnimals);
     } catch (e) {
       return res.status(500).json(e);
