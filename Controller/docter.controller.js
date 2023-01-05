@@ -173,20 +173,18 @@ module.exports = {
       };
       console.log(docData);
       if (!stray.isVaccinated) {
-        const updateVaccination = await Stray.findByIdAndUpdate(staryId, {
+        await Stray.findByIdAndUpdate(staryId, {
           $set: {
             isVaccinated: true,
             CurrentDoctor: docData,
           },
         });
-        console.log(updateVaccination);
-        const data = [];
-        data.push(stray);
+        const updatedData = await Stray.findById(staryId);
         stray.NgoDetails.forEach(async (value) => {
           const id = value.NgoId.toHexString();
           await Ngo.findByIdAndUpdate(id, {
             $push: {
-              VaccinatedAnimals: data,
+              VaccinatedAnimals: updatedData,
             },
           });
         });
