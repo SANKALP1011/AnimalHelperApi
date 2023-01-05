@@ -4,6 +4,7 @@ const Animal = require("../Model/Animal.model");
 const User = require("../Model/User.model");
 const Pet = require("../Model/Pet.modal");
 const Stray = require("../Model/Stray.model");
+const Ngo = require("../Model/Ngo.model");
 
 /* Below is the functionality for calculating the distance between two points by using their latitude and longitude */
 const calculateDistanceUsingLatandLong = (lat1, long1, lat2, long2) => {
@@ -174,6 +175,16 @@ module.exports = {
         const updateVaccination = await Stray.findByIdAndUpdate(staryId, {
           isVaccinated: true,
           CurrentDoctor: docData,
+        });
+        console.log(updateVaccination);
+        const data = [];
+        data.push(updateVaccination);
+        stray.NgoDetails.forEach(async (value) => {
+          await Ngo.findByIdAndUpdate(value.NgoId.toHexString(), {
+            $push: {
+              VaccinatedAnimals: data,
+            },
+          });
         });
         return res.status(200).json({
           Message:
