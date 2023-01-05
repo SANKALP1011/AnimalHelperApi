@@ -17,7 +17,7 @@ const PaymentGateway = async (description, Address, name, Amount) => {
       },
     },
     amount: 1,
-    currency: "usd",
+    currency: "usd", // stripe current version does not provide the rupees support for the indian that is why I am using the dollar as the currency for the payment.
     payment_method_types: ["card"],
   });
 };
