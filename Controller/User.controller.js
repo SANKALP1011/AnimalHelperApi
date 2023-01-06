@@ -345,7 +345,6 @@ module.exports = {
         Type: Animal.Type,
         AdopoterId: Animal.AdopterId,
       };
-      console.log(AnimalData);
       const data = [];
       data.push(AnimalData);
       const updateUserAdoptedArray = await User.findByIdAndUpdate(userId, {
