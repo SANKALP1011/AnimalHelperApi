@@ -27,3 +27,5 @@ app.use(NgoRoutes);
 app.listen("3001", (err) => {
   console.log("Server is up and running");
 });
+
+// fix the bugs and start the deployment
