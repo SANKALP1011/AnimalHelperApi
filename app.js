@@ -28,7 +28,7 @@ app.use(UserRoutes);
 app.use(AnimalRoutes);
 app.use(DocterRoutes);
 app.use(NgoRoutes);
-app.listen("3001", (err) => {
+app.listen("3001" || process.env.PORT, (err) => {
   console.log("Server is up and running");
 });
 
