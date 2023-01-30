@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,9 @@
     "mysql": "^2.18.1",
     "node-geocoder": "^4.2.0",
     "nodemon": "^2.0.20",
-    "stripe": "^11.5.0"
+    "stripe": "^11.5.0",
+    "swagger": "^0.7.5",
+    "swagger-autogen": "^2.23.0",
+    "swagger-ui-express": "^4.6.0"
   }
 }
