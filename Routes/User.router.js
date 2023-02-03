@@ -18,7 +18,7 @@ const {
 const AuthToken = require("../Middleware/authToken.middleware");
 
 UserRouter.post("/SignUp", SignUp);
-UserRouter.get("/LogIn", LogIn);
+UserRouter.post("/LogIn", LogIn);
 UserRouter.get("/getNearbyAnimal", getNearbyAnimal);
 UserRouter.post("/reportInjuredAnimal", reportInjuredAnimal);
 UserRouter.get("/injuredAnimalStatus", checkInjuredAnimalStatus);
