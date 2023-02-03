@@ -7,7 +7,7 @@
   },
   "host": "localhost:3001",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": ["https", "http"],
   "paths": {
     "/SignUp": {
       "post": {
