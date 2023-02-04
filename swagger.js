@@ -15,7 +15,17 @@ const doc = {
     description:
       "This is the server of the animal welfare api made for the well being of the animals.",
   },
-  host: "localhost:3001",
+  servers: [
+    {
+      url: "https://animal-welfare-api.herokuapp.com",
+      description: "Production Server",
+    },
+    {
+      url: "http://localhost:3001",
+      description: "Testing Server",
+    },
+  ],
+  host: "https://animal-welfare-api.herokuapp.com",
   securitySchemes: {
     bearerAuth: {
       type: "http",
