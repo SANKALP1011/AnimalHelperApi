@@ -183,11 +183,13 @@ module.exports = {
     const CurrentUser = await User.findById(userId);
     try {
       if (CurrentUser.PetDetails) {
-        CurrentUser.PetDetails.forEach(async (PetData) => {
-          const petId = PetData._id.toHexString();
-          const UserPet = await Pet.findById(petId);
-          return res.status(200).json(UserPet);
-        });
+        for (var i = 0; i <= CurrentUser.PetDetails.length; i++) {
+          CurrentUser.PetDetails.forEach(async (PetData) => {
+            const petId = PetData[i]._id.toHexString();
+            const UserPet = await Pet.findById(petId);
+            return res.status(200).json(UserPet);
+          });
+        }
       } else {
         return res.status(200).json({
           Message: "Currently , you have'nt added any pet in our pet records.",
