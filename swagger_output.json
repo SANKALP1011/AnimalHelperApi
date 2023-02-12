@@ -7,9 +7,7 @@
   },
   "host": "animal-welfare-api.herokuapp.com",
   "basePath": "/",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["https"],
   "paths": {
     "/SignUp": {
       "post": {
