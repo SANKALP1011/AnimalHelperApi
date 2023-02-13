@@ -179,17 +179,14 @@ module.exports = {
     }
   },
   getPetDetails: async (req, res) => {
+    //take user id
+    //use user id to find the current user
+    //use current user and send the details of the current user pet details array
     const userId = req.query.id;
     const CurrentUser = await User.findById(userId);
     try {
       if (CurrentUser.PetDetails) {
-        for (var i = 0; i <= CurrentUser.PetDetails.length; i++) {
-          CurrentUser.PetDetails.forEach(async (PetData) => {
-            const petId = PetData[i]._id.toHexString();
-            const UserPet = await Pet.findById(petId);
-            return res.status(200).json(UserPet);
-          });
-        }
+        return res.status(200).json(CurrentUser.PetDetails);
       } else {
         return res.status(200).json({
           Message: "Currently , you have'nt added any pet in our pet records.",
