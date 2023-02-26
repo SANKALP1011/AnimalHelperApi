@@ -49,7 +49,7 @@ module.exports = {
       if (!findUser) {
         return res
           .status(500)
-          .send(
+          .json(
             "This user does not exist , please try again with the new credentials"
           );
       }
