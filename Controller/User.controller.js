@@ -47,10 +47,11 @@ module.exports = {
     const findUser = await User.findOne({ Email, Password });
     try {
       if (!findUser) {
-        return res.status(500).json({
-          Message:
-            "This user does not exist , please try again with the new credentials",
-        });
+        return res
+          .status(500)
+          .send(
+            "This user does not exist , please try again with the new credentials"
+          );
       }
       const LogInToken = sign({ Password: findUser }, "ANI1213", {
         expiresIn: "24h",
