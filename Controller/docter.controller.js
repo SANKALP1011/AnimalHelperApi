@@ -53,10 +53,14 @@ module.exports = {
         });
       }
       console.log(CurrentDoc._id);
-      const UpdateStatus = await Docter.findByIdAndUpdate(CurrentDoc._id, {
-        isDocterOnline: true,
-        isDocterAvailaible: true,
-      });
+      const UpdateStatus = await Docter.findByIdAndUpdate(
+        CurrentDoc._id,
+        {
+          isDocterOnline: true,
+          isDocterAvailaible: true,
+        },
+        { new: true }
+      );
       return res.status(200).json(UpdateStatus);
     } catch (e) {
       return res.status(500).json(e);
@@ -89,9 +93,13 @@ module.exports = {
         }
       });
     }
-    await Docter.findByIdAndUpdate(doctorId, {
-      NearByAnimal: data,
-    });
+    await Docter.findByIdAndUpdate(
+      doctorId,
+      {
+        NearByAnimal: data,
+      },
+      { new: true }
+    );
     return res.status(200).json(data);
   },
   provideAnimalHelp: async (req, res) => {
@@ -106,9 +114,13 @@ module.exports = {
         isAnimalSaved: true,
         DocterName: CurrentDoc.DocterName,
       });
-      const updateSavedAnimalList = await Docter.findByIdAndUpdate(doctorId, {
-        No_Of_Animal_Saved: updateAnimalStatus,
-      });
+      const updateSavedAnimalList = await Docter.findByIdAndUpdate(
+        doctorId,
+        {
+          No_Of_Animal_Saved: updateAnimalStatus,
+        },
+        { new: true }
+      );
       return res.status(200).json(updateSavedAnimalList);
     } catch (e) {
       return res.status(500).json(e);
@@ -119,6 +131,7 @@ module.exports = {
     const docId = req.query.id;
     const userId = req.query.uId;
     const CurrentDoc = await Docter.findById(docId);
+    console.log(CurrentDoc);
     const HealthData = req.body;
     console.log(HealthData);
     try {
@@ -128,9 +141,15 @@ module.exports = {
           CurrentDoc.PatientPetId,
           {
             PetHealthCardData: HealthData,
-          }
+          },
+          { new: true }
         );
+        console.log(updateData);
         return res.status(200).json(updateData);
+      } else {
+        return res.status(401).json({
+          Error: "Sorry , you have currently no pet under you",
+        });
       }
     } catch (e) {
       return res.status(500).json(e);
@@ -143,15 +162,26 @@ module.exports = {
       const patientId = CurrentDoctor.PatientPetId;
       console.log(patientId);
       const Patient = await Pet.findById(patientId);
-      if (Patient.isPetSick) {
-        const MedicineData = req.body;
-        const precibeMed = await Pet.findByIdAndUpdate(patientId, {
-          MedicalPresecription: MedicineData,
-        });
-        return res.status(200).json(precibeMed);
+      if (Patient) {
+        if (Patient.isPetSick) {
+          const MedicineData = req.body;
+          const precibeMed = await Pet.findByIdAndUpdate(
+            patientId,
+            {
+              MedicalPresecription: MedicineData,
+            },
+            { new: true }
+          );
+          return res.status(200).json(precibeMed);
+        } else {
+          return res.status(200).json({
+            Message: "Your pet " + patientId.Petname + " is already healthy.",
+          });
+        }
       } else {
-        return res.status(200).json({
-          Message: "Your pet " + patientId.Petname + " is healthy now.",
+        return res.status(500).json({
+          Error:
+            "Sorry , there is no pet under your observation that is sick right now",
         });
       }
     } catch (e) {
@@ -173,20 +203,28 @@ module.exports = {
       };
       console.log(docData);
       if (!stray.isVaccinated) {
-        await Stray.findByIdAndUpdate(staryId, {
-          $set: {
-            isVaccinated: true,
-            CurrentDoctor: docData,
+        await Stray.findByIdAndUpdate(
+          staryId,
+          {
+            $set: {
+              isVaccinated: true,
+              CurrentDoctor: docData,
+            },
           },
-        });
+          { new: true }
+        );
         const updatedData = await Stray.findById(staryId);
         stray.NgoDetails.forEach(async (value) => {
           const id = value.NgoId.toHexString();
-          await Ngo.findByIdAndUpdate(id, {
-            $push: {
-              VaccinatedAnimals: updatedData,
+          await Ngo.findByIdAndUpdate(
+            id,
+            {
+              $push: {
+                VaccinatedAnimals: updatedData,
+              },
             },
-          });
+            { new: true }
+          );
         });
         return res.status(200).json({
           Message:

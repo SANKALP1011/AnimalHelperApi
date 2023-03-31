@@ -56,9 +56,13 @@ module.exports = {
       const LogInToken = sign({ Password: findUser }, "ANI1213", {
         expiresIn: "24h",
       });
-      const upadtedUserStatus = await User.findByIdAndUpdate(findUser._id, {
-        isOnline: true,
-      });
+      const upadtedUserStatus = await User.findByIdAndUpdate(
+        findUser._id,
+        {
+          isOnline: true,
+        },
+        { new: true }
+      );
       return res.status(200).json({ upadtedUserStatus, LogInToken });
     } catch (e) {
       return res.status(500).json({
@@ -89,9 +93,13 @@ module.exports = {
         }
       });
     }
-    await User.findByIdAndUpdate(userIdQuery, {
-      InjuredAnimalNearby: data,
-    });
+    await User.findByIdAndUpdate(
+      userIdQuery,
+      {
+        InjuredAnimalNearby: data,
+      },
+      { new: true }
+    );
     return res.status(200).json(data); //Return the list of the nearby animals based on user location so that user could save them
   },
   reportInjuredAnimal: async (req, res) => {
@@ -105,10 +113,14 @@ module.exports = {
         UserNamewhoReported: CurrentUser.UserName,
         isAnimalReported: true,
       });
-      const updateUserAnimalStatus = await User.findByIdAndUpdate(userIdQuery, {
-        animalReported: reportedAnimal,
-        hasReportedAnimal: true,
-      });
+      const updateUserAnimalStatus = await User.findByIdAndUpdate(
+        userIdQuery,
+        {
+          animalReported: reportedAnimal,
+          hasReportedAnimal: true,
+        },
+        { new: true }
+      );
       return res.status(200).json(updateUserAnimalStatus);
     } catch (e) {
       return res.status(500).json(e);
@@ -129,9 +141,13 @@ module.exports = {
             "The animal is reported. Waiting for the doctor to arrive at the location to help the animal",
         });
       } else if (value.hasDocterArrived && value.isAnimalSaved) {
-        User.findByIdAndUpdate(userIdQuery, {
-          animalReported: [],
-        });
+        User.findByIdAndUpdate(
+          userIdQuery,
+          {
+            animalReported: [],
+          },
+          { new: true }
+        );
         return res.status(200).json({
           Mesaage: "Animal is saved.",
         });
@@ -166,12 +182,16 @@ module.exports = {
       const data = [];
       const newPet = await pet.save();
       const pushValue = data.push(newPet);
-      const updatedPetDetails = await User.findByIdAndUpdate(userid, {
-        hasPet: true,
-        $push: {
-          PetDetails: data,
+      const updatedPetDetails = await User.findByIdAndUpdate(
+        userid,
+        {
+          hasPet: true,
+          $push: {
+            PetDetails: data,
+          },
         },
-      });
+        { new: true }
+      );
       return res.status(200).json(updatedPetDetails);
     } catch (e) {
       return res.status(500).json({
@@ -211,16 +231,22 @@ module.exports = {
     try {
       const chosenDocterDetails = await Docter.findById(docId);
       CurrentUser.PetDetails.forEach(async (PetData) => {
-        const petId = PetData._id.toHexString();
-        const PetDoctor = await Pet.findByIdAndUpdate(petId, {
-          Petdoctor: chosenDocterDetails.DocterName,
-          PetDoctorId: chosenDocterDetails._id,
-        });
+        console.log(PetData.id);
+        const petId = PetData[0]._id.toHexString();
+        const PetDoctor = await Pet.findByIdAndUpdate(
+          petId,
+          {
+            Petdoctor: chosenDocterDetails.DocterName,
+            PetDoctorId: chosenDocterDetails._id,
+          },
+          { new: true }
+        );
         const updateDoctorClient = await Docter.findByIdAndUpdate(
           chosenDocterDetails._id,
           {
             PatientPetId: petId,
-          }
+          },
+          { new: true }
         );
         console.log(updateDoctorClient);
         return res.status(200).json(PetDoctor);
@@ -291,11 +317,15 @@ module.exports = {
       data.push(ngoData);
       await PaymentGateway("Payment for the animal rescue", ngo.Ngoname, amount)
         .then(async (result) => {
-          const updateDonatedNgoList = await User.findByIdAndUpdate(userId, {
-            $push: {
-              donatedtoNgo: data,
+          const updateDonatedNgoList = await User.findByIdAndUpdate(
+            userId,
+            {
+              $push: {
+                donatedtoNgo: data,
+              },
             },
-          });
+            { new: true }
+          );
           console.log(updateDonatedNgoList);
           return res.status(200).json({
             Success:
@@ -332,13 +362,18 @@ module.exports = {
     const aniId = req.query.nId;
     const CurrentUser = await User.findById(userId);
     const Animal = await AdoptedAnimal.findById(aniId);
+    console.log(Animal);
     try {
       console.log(CurrentUser._id);
-      const upadateAdopterId = await AdoptedAnimal.findByIdAndUpdate(aniId, {
-        AdopterId: CurrentUser._id.toHexString(),
-        isAdopted: true,
-        AdopterName: CurrentUser.UserName,
-      });
+      const upadateAdopterId = await AdoptedAnimal.findByIdAndUpdate(
+        aniId,
+        {
+          AdopterId: CurrentUser._id.toHexString(),
+          isAdopted: true,
+          AdopterName: CurrentUser.UserName,
+        },
+        { new: true }
+      );
       const AnimalData = {
         Name: Animal.Name,
         NgoName: Animal.NgoName,
@@ -347,11 +382,15 @@ module.exports = {
       };
       const data = [];
       data.push(AnimalData);
-      const updateUserAdoptedArray = await User.findByIdAndUpdate(userId, {
-        $push: {
-          AdoptedAnimal: data,
+      const updateUserAdoptedArray = await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: {
+            AdoptedAnimal: data,
+          },
         },
-      });
+        { new: true }
+      );
       console.log(updateUserAdoptedArray);
       return await res.status(200).json(CurrentUser.AdoptedAnimal);
     } catch (e) {

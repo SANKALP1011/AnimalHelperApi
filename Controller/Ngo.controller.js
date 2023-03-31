@@ -55,11 +55,15 @@ module.exports = {
       const strList = [];
       const pushData = strList.push(stray);
       console.log(strList);
-      const updateStrayList = await Ngo.findByIdAndUpdate(ngoId, {
-        $push: {
-          StrayAnimalList: strList,
+      const updateStrayList = await Ngo.findByIdAndUpdate(
+        ngoId,
+        {
+          $push: {
+            StrayAnimalList: strList,
+          },
         },
-      });
+        { new: true }
+      );
       return res.status(200).json(updateStrayList);
     } catch (e) {
       return res.status(500).json(e);
@@ -92,11 +96,15 @@ module.exports = {
       const data = [];
       const addAnimal = await animal.save();
       data.push(addAnimal);
-      const updateNgoData = await Ngo.findByIdAndUpdate(ngoId, {
-        $push: {
-          AnimalsForAdoption: data,
+      const updateNgoData = await Ngo.findByIdAndUpdate(
+        ngoId,
+        {
+          $push: {
+            AnimalsForAdoption: data,
+          },
         },
-      });
+        { new: true }
+      );
       return res.status(200).json(updateNgoData);
     } catch (e) {
       return res.status(500).json(e);
