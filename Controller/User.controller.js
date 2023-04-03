@@ -149,23 +149,17 @@ module.exports = {
           { new: true }
         );
         return res.status(200).json({
-          Mesaage: "Animal is saved.",
-        });
-      } else if (
-        value.isCriticalMedicalCareRequired &&
-        value.hasSeriousInjury
-      ) {
-        return res.status(200).json({
-          Mesage:
-            "Go the critical section inorder to provide the immediate help to this animal",
+          Message:
+            "The docter has successfully helped the animal and the animal is now safe",
         });
       } else {
         return res.status(200).json({
-          Message: "There is no current animal that you have reported",
+          Message: "Sorry, the status of the animal could not be found",
         });
       }
     });
   },
+
   addUserPetRecord: async (req, res) => {
     const userid = req.query.id;
     const CurrentUser = await User.findById(userid);
