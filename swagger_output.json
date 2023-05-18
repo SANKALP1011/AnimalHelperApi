@@ -7,7 +7,9 @@
   },
   "host": "animal-welfare-api.herokuapp.com",
   "basePath": "/",
-  "schemes": ["https"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/SignUp": {
       "post": {
@@ -63,6 +65,26 @@
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/getUserDetails": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -654,6 +676,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
