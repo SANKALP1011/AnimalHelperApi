@@ -14,11 +14,13 @@ const {
   getDonatedNgoList,
   adoptAnimal,
   getAdoptedAnimal,
+  getUserDetails,
 } = require("../Controller/User.controller");
 const AuthToken = require("../Middleware/authToken.middleware");
 
 UserRouter.post("/SignUp", SignUp);
 UserRouter.post("/LogIn", LogIn);
+UserRouter.get("/getUserDetails", getUserDetails);
 UserRouter.get("/getNearbyAnimal", getNearbyAnimal);
 UserRouter.post("/reportInjuredAnimal", reportInjuredAnimal);
 UserRouter.get("/injuredAnimalStatus", checkInjuredAnimalStatus);

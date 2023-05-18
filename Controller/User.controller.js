@@ -70,6 +70,15 @@ module.exports = {
       });
     }
   },
+  getUserDetails: async (req, res) => {
+    const userId = req.query.userId;
+    try {
+      const userDetails = await User.findById(userId);
+      return res.status(200).json(userDetails);
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
   getNearbyAnimal: async (req, res) => {
     const userIdQuery = req.query.userId;
     const CurrentUser = await User.findById(userIdQuery);
