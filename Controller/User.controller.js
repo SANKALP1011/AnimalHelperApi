@@ -125,7 +125,7 @@ module.exports = {
       const updateUserAnimalStatus = await User.findByIdAndUpdate(
         userIdQuery,
         {
-          animalReported: reportedAnimal,
+          $push: { animalReported: reportedAnimal },
           hasReportedAnimal: true,
         },
         { new: true }
