@@ -83,33 +83,38 @@ module.exports = {
     const userIdQuery = req.query.userId;
     const CurrentUser = await User.findById(userIdQuery);
     const animalList = await Animal.find();
-    var data = [];
+
+    const data = [];
+
     if (animalList.length) {
-      animalList.forEach(async (value) => {
-        var AnimalLong = value.AnimalLocation.coordinates[0];
-        var AnimalLat = value.AnimalLocation.coordinates[1];
-        var userlong = CurrentUser.location.coordinates[0];
-        var userLat = CurrentUser.location.coordinates[1];
-        var dist = calculateDistanceUsingLatandLong(
-          //This is hessian function that takes lat and long of two points and use it to calculate the distance between two points.
+      for (const value of animalList) {
+        const AnimalLong = value.AnimalLocation.coordinates[0];
+        const AnimalLat = value.AnimalLocation.coordinates[1];
+        const userLong = CurrentUser.location.coordinates[0];
+        const userLat = CurrentUser.location.coordinates[1];
+        const dist = calculateDistanceUsingLatandLong(
           userLat,
-          userlong,
+          userLong,
           AnimalLat,
           AnimalLong
         );
         if (dist < 5) {
           data.push(value);
         }
-      });
+      }
     }
+
     await User.findByIdAndUpdate(
       userIdQuery,
       {
-        InjuredAnimalNearby: data,
+        $push: {
+          InjuredAnimalNearby: data,
+        },
       },
       { new: true }
     );
-    return res.status(200).json(data); //Return the list of the nearby animals based on user location so that user could save them
+
+    return res.status(200).json(data);
   },
   reportInjuredAnimal: async (req, res) => {
     const userIdQuery = req.query.userId;
