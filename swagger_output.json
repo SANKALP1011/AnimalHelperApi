@@ -550,6 +550,40 @@
         }
       }
     },
+    "/ngo/getNgo": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/ngo/getNgoById": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "ngoId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/docterSignUp": {
       "post": {
         "description": "",
@@ -582,6 +616,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -717,6 +754,40 @@
           },
           {
             "name": "stId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/getAllDoctors": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/getDoctorById": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "docId",
             "in": "query",
             "type": "string"
           }
