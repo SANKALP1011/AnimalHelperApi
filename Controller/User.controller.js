@@ -37,6 +37,7 @@ module.exports = {
         Password: req.body.Password,
         Address: req.body.Address,
       });
+
       return res.status(200).json(NewUser);
     } catch (e) {
       return res.status(500).json(e);

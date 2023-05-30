@@ -36,7 +36,7 @@ module.exports = {
         DocterNumber: req.body.DocterNumber,
         DocterAddress: req.body.DocterAddress,
       });
-      return res.status(200).json(NewDoctor);
+      return res.status(500).json(NewDoctor);
     } catch (e) {
       return res.status(200).json({
         Message: e,
@@ -64,6 +64,35 @@ module.exports = {
       return res.status(200).json(UpdateStatus);
     } catch (e) {
       return res.status(500).json(e);
+    }
+  },
+  getDoctors: async (req, res) => {
+    try {
+      const data = await Docter.find();
+      if (data != null) {
+        return res.status(200).json(data);
+      } else {
+        return res.status(200).json({
+          Message: "Sorry , as of now no doctor exist with our database",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
+  getDoctorsDetailsById: async (req, res) => {
+    const id = req.query.docId;
+    try {
+      const data = await Docter.findById(id);
+      if (data != null) {
+        return res.status(200).json(data);
+      } else {
+        return res.status(200).json({
+          Message: "Sorry , no doctor exists with that id",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json(err);
     }
   },
   nearbyAnimal: async (req, res) => {

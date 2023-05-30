@@ -36,6 +36,35 @@ module.exports = {
       });
     }
   },
+  getAllNgo: async (req, res) => {
+    try {
+      const data = await Ngo.find();
+      if (data != null) {
+        return res.status(200).json(data);
+      } else {
+        return res.status(200).json({
+          Message: "Sorry , as of now no ngo exist with our database",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
+  getNgoDetailsById: async (req, res) => {
+    const id = req.query.ngoId;
+    try {
+      const data = await Ngo.findById(id);
+      if (data != null) {
+        return res.status(200).json(data);
+      } else {
+        return res.status(200).json({
+          Message: "Sorry , no ngo exists with that id",
+        });
+      }
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
   addStrayAnimals: async (req, res) => {
     const ngoId = req.query.id;
     const CurrentNgo = await Ngo.findById(ngoId);
