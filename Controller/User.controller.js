@@ -82,38 +82,46 @@ module.exports = {
   },
   getNearbyAnimal: async (req, res) => {
     const userIdQuery = req.query.userId;
-    const CurrentUser = await User.findById(userIdQuery);
+    const currentUser = await User.findById(userIdQuery);
     const animalList = await Animal.find();
 
     const data = [];
 
     if (animalList.length) {
       for (const value of animalList) {
-        const AnimalLong = value.AnimalLocation.coordinates[0];
-        const AnimalLat = value.AnimalLocation.coordinates[1];
-        const userLong = CurrentUser.location.coordinates[0];
-        const userLat = CurrentUser.location.coordinates[1];
+        const animalLong = value.AnimalLocation.coordinates[0];
+        const animalLat = value.AnimalLocation.coordinates[1];
+        const userLong = currentUser.location.coordinates[0];
+        const userLat = currentUser.location.coordinates[1];
         const dist = calculateDistanceUsingLatandLong(
           userLat,
           userLong,
-          AnimalLat,
-          AnimalLong
+          animalLat,
+          animalLong
         );
-        if (dist < 5 && !CurrentUser.InjuredAnimalNearby.includes(value._id)) {
+        if (
+          dist < 5 &&
+          !currentUser.InjuredAnimalNearby.some(
+            (animal) => animal._id === value._id
+          )
+        ) {
           data.push(value);
         }
       }
     }
 
-    await User.findByIdAndUpdate(
-      userIdQuery,
-      {
-        $push: {
-          InjuredAnimalNearby: data,
+    // Push new nearby animals to the InjuredAnimalNearby array
+    if (data.length > 0) {
+      await User.findByIdAndUpdate(
+        userIdQuery,
+        {
+          $push: {
+            InjuredAnimalNearby: { $each: data },
+          },
         },
-      },
-      { new: true }
-    );
+        { new: true }
+      );
+    }
 
     return res.status(200).json(data);
   },
