@@ -99,7 +99,7 @@ module.exports = {
           AnimalLat,
           AnimalLong
         );
-        if (dist < 5) {
+        if (dist < 5 && !CurrentUser.InjuredAnimalNearby.includes(value._id)) {
           data.push(value);
         }
       }
@@ -176,38 +176,45 @@ module.exports = {
   },
 
   addUserPetRecord: async (req, res) => {
-    const userid = req.query.id;
-    const CurrentUser = await User.findById(userid);
+    const userId = req.query.id;
+
     try {
+      const currentUser = await User.findById(userId);
+      if (!currentUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
       const pet = new Pet({
         Petname: req.body.Petname,
         Pettype: req.body.Pettype,
         PetBreed: req.body.PetBreed,
-        PetParentId: CurrentUser._id,
+        PetParentId: currentUser._id,
         Petage: req.body.Petage,
-        PetParent: CurrentUser.UserName,
-        PetParentLoation: CurrentUser.location.formattedAddress,
+        PetParent: currentUser.UserName,
+        PetParentLocation: currentUser.location.formattedAddress,
       });
-      const data = [];
+
       const newPet = await pet.save();
-      const pushValue = data.push(newPet);
+
       const updatedPetDetails = await User.findByIdAndUpdate(
-        userid,
+        userId,
         {
           hasPet: true,
           $push: {
-            PetDetails: data,
+            PetDetails: newPet,
           },
         },
         { new: true }
       );
+
       return res.status(200).json(updatedPetDetails);
-    } catch (e) {
-      return res.status(500).json({
-        Message: e,
-      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Error adding pet", error: error.message });
     }
   },
+
   getPetDetails: async (req, res) => {
     //take user id
     //use user id to find the current user
