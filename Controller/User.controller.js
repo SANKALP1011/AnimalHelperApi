@@ -86,6 +86,7 @@ module.exports = {
     const animalList = await Animal.find();
 
     const data = [];
+    const addedAnimalIds = []; // Array to track added animal IDs
 
     if (animalList.length) {
       for (const value of animalList) {
@@ -99,13 +100,9 @@ module.exports = {
           animalLat,
           animalLong
         );
-        if (
-          dist < 5 &&
-          !currentUser.InjuredAnimalNearby.some(
-            (animal) => animal._id === value._id
-          )
-        ) {
+        if (dist < 5 && !addedAnimalIds.includes(value._id)) {
           data.push(value);
+          addedAnimalIds.push(value._id); // Add the animal ID to the tracking array
         }
       }
     }
@@ -115,9 +112,7 @@ module.exports = {
       await User.findByIdAndUpdate(
         userIdQuery,
         {
-          $push: {
-            InjuredAnimalNearby: { $each: data },
-          },
+          InjuredAnimalNearby: data,
         },
         { new: true }
       );
@@ -125,6 +120,7 @@ module.exports = {
 
     return res.status(200).json(data);
   },
+
   reportInjuredAnimal: async (req, res) => {
     const userIdQuery = req.query.userId;
     const CurrentUser = await User.findById(userIdQuery);
