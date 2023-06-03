@@ -252,12 +252,19 @@ module.exports = {
       const chosenDocterDetails = await Docter.findById(docId);
       CurrentUser.PetDetails.forEach(async (PetData) => {
         console.log(PetData.id);
-        const petId = PetData[0]._id.toHexString();
+        const petId = PetData._id.toHexString();
         const PetDoctor = await Pet.findByIdAndUpdate(
           petId,
           {
             Petdoctor: chosenDocterDetails.DocterName,
             PetDoctorId: chosenDocterDetails._id,
+          },
+          { new: true }
+        );
+        const updateUserPetData = await User.findByIdAndUpdate(
+          userId,
+          {
+            PetDetails: PetDoctor,
           },
           { new: true }
         );
