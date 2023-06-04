@@ -149,4 +149,12 @@ module.exports = {
       return res.status(500).json(e);
     }
   },
+  getAnimalAdoptionList: async (req, res) => {
+    try {
+      const respone = await AdoptedAnimal.find();
+      return res.status(200).json(respone);
+    } catch (err) {
+      return err;
+    }
+  },
 };

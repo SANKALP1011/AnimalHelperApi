@@ -10,6 +10,7 @@ const {
   getVaccinatedDetails,
   getAllNgo,
   getNgoDetailsById,
+  getAnimalAdoptionList,
 } = require("../Controller/Ngo.controller");
 
 NgoRouter.post("/ngo/signUp", NgoSignUp);
@@ -20,5 +21,6 @@ NgoRouter.post("/ngo/addAdoptList", addAnimalforAdoption);
 NgoRouter.get("/ngo/vaccDetails", getVaccinatedDetails);
 NgoRouter.get("/ngo/getNgo", getAllNgo);
 NgoRouter.get("/ngo/getNgoById", getNgoDetailsById);
+NgoRouter.get("/ngo/adoptionList", getAnimalAdoptionList);
 
 module.exports = NgoRouter;
