@@ -405,7 +405,7 @@ module.exports = {
         Name: Animal.Name,
         NgoName: Animal.NgoName,
         Type: Animal.Type,
-        AdopoterId: Animal.AdopterId,
+        AdopoterId: userId,
       };
       const data = [];
       data.push(AnimalData);
