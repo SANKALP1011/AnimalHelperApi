@@ -28,17 +28,18 @@ function deg2rad(deg) {
 
 module.exports = {
   DocterSignUp: async (req, res) => {
+    console.log(req.body);
     try {
       const NewDoctor = await Docter.create({
         DocterName: req.body.DocterName,
         DocterEmail: req.body.DocterEmail,
         DocterPassword: req.body.DocterPassword,
-        DocterNumber: req.body.DocterNumber,
-        DocterAddress: req.body.DocterAddress,
+        Address: req.body.Address,
       });
-      return res.status(500).json(NewDoctor);
+      return res.status(200).json(NewDoctor);
     } catch (e) {
-      return res.status(200).json({
+      console.log(e);
+      return res.status(500).json({
         Message: e,
       });
     }
