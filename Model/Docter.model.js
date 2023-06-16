@@ -1,8 +1,9 @@
 const express = require("express");
-const moongose = require("mongoose");
+const mongoose = require("mongoose");
+
 const geoCoder = require("../Middleware/geoCoder.middleware");
 
-const DocterSchema = new moongose.Schema({
+const DocterModel = new mongoose.Schema({
   DocterName: {
     type: String,
     required: true,
@@ -17,20 +18,20 @@ const DocterSchema = new moongose.Schema({
   },
   DocterNumber: {
     type: Number,
-    required: true,
+    default: "",
   },
   isDocterOnline: {
     type: Boolean,
     default: false,
   },
-  DocterAddress: {
+  Address: {
     type: String,
   },
   PatientPetId: {
     type: String,
     default: "",
   },
-  DocterLocation: {
+  location: {
     type: {
       type: String,
       enum: ["Point"],
@@ -56,15 +57,15 @@ const DocterSchema = new moongose.Schema({
   },
   No_Of_Animal_Saved: [],
 });
-DocterSchema.pre("save", async function (next) {
-  const loc = await geoCoder.geocode(this.DocterAddress);
-  this.DocterLocation = {
+DocterModel.pre("save", async function (next) {
+  const loc = await geoCoder.geocode(this.Address);
+  this.location = {
     type: ["Point"],
     coordinates: [loc[0].longitude, loc[0].latitude],
     formattedAddress: loc[0].formattedAddress,
   };
-  this.DocterAddress = undefined;
+  this.Address = undefined;
   next();
 });
 
-module.exports = moongose.model("Docter", DocterSchema);
+module.exports = mongoose.model("Docter", DocterModel);
