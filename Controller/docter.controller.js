@@ -100,29 +100,32 @@ module.exports = {
     const doctorId = req.query.docId;
     const CurrentDoctor = await Docter.findById(doctorId);
     const animalList = await Animal.find();
-    var data = [];
+
+    const data = [];
+    const addedAnimalIds = [];
     if (animalList.length) {
-      animalList.forEach(async (value) => {
-        var AnimalLong = value.AnimalLocation.coordinates[0];
-        var AnimalLat = value.AnimalLocation.coordinates[1];
-        var doctorLong = CurrentDoctor.DocterLocation.coordinates[0];
-        var doctorLat = CurrentDoctor.DocterLocation.coordinates[1];
-        var dist = calculateDistanceUsingLatandLong(
-          //This is hessian function that takes lat and long of two points and use it to calculate the distance between two points.
+      for (const value of animalList) {
+        const AnimalLong = value.AnimalLocation.coordinates[0];
+        const AnimalLat = value.AnimalLocation.coordinates[1];
+        const doctorLong = CurrentDoctor.location.coordinates[0];
+        const doctorLat = CurrentDoctor.location.coordinates[1];
+        const dist = calculateDistanceUsingLatandLong(
           doctorLat,
           doctorLong,
           AnimalLat,
           AnimalLong
         );
-        if (dist < 5) {
+
+        if (
+          dist < 5 &&
+          !value.isAnimalSaved &&
+          !addedAnimalIds.includes(value._id)
+        ) {
           data.push(value);
-          console.log(data.length);
         }
-        if (value.isAnimalSaved) {
-          data.pop();
-        }
-      });
+      }
     }
+
     await Docter.findByIdAndUpdate(
       doctorId,
       {
@@ -130,6 +133,7 @@ module.exports = {
       },
       { new: true }
     );
+
     return res.status(200).json(data);
   },
   provideAnimalHelp: async (req, res) => {
