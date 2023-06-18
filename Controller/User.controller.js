@@ -100,7 +100,11 @@ module.exports = {
           animalLat,
           animalLong
         );
-        if (dist < 5 && !addedAnimalIds.includes(value._id)) {
+        if (
+          dist < 5 &&
+          !addedAnimalIds.includes(value._id) &&
+          !value.isAnimalSaved
+        ) {
           data.push(value);
           addedAnimalIds.push(value._id); // Add the animal ID to the tracking array
         }
