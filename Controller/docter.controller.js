@@ -143,15 +143,22 @@ module.exports = {
     const CurrentDoc = await Docter.findById(doctorId);
     try {
       //once the animal status changes to saved then all those animals would be passed to the save animal list
-      const updateAnimalStatus = await Animal.findByIdAndUpdate(animalId, {
-        hasDocterArrived: true,
-        isAnimalSaved: true,
-        DocterName: CurrentDoc.DocterName,
-      });
+      const updateAnimalStatus = await Animal.findByIdAndUpdate(
+        animalId,
+        {
+          hasDocterArrived: true,
+          isAnimalSaved: true,
+          DocterName: CurrentDoc.DocterName,
+        },
+        { new: true }
+      );
       const updateSavedAnimalList = await Docter.findByIdAndUpdate(
         doctorId,
         {
-          No_Of_Animal_Saved: updateAnimalStatus,
+          $push: {
+            No_Of_Animal_Saved: updateAnimalStatus,
+          },
+          $pull: { NearByAnimal: { _id: animalId } },
         },
         { new: true }
       );
