@@ -42,7 +42,10 @@ const DocterModel = new mongoose.Schema({
     },
     formattedAddress: String,
   },
-  NearByAnimal: [],
+  NearByAnimal: {
+    type: Array,
+    default: [],
+  },
   hasDocterArrivedAtLocation: {
     type: Boolean,
     default: false,
@@ -55,7 +58,10 @@ const DocterModel = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  No_Of_Animal_Saved: [],
+  No_Of_Animal_Saved: {
+    type: Array,
+    default: [],
+  },
 });
 DocterModel.pre("save", async function (next) {
   const loc = await geoCoder.geocode(this.Address);

@@ -139,8 +139,10 @@ module.exports = {
   provideAnimalHelp: async (req, res) => {
     const doctorId = req.query.docId;
     const animalId = req.query.aniId;
+
     // user would pass animal id as the param to the url from the nearby animal list and then use it to provide cureness to that animals
     const CurrentDoc = await Docter.findById(doctorId);
+
     try {
       //once the animal status changes to saved then all those animals would be passed to the save animal list
       const updateAnimalStatus = await Animal.findByIdAndUpdate(
@@ -155,13 +157,14 @@ module.exports = {
       const updateSavedAnimalList = await Docter.findByIdAndUpdate(
         doctorId,
         {
-          $push: {
-            No_Of_Animal_Saved: updateAnimalStatus,
+          $addToSet: {
+            No_Of_Animal_Saved: animalId,
           },
           $pull: { NearByAnimal: { _id: animalId } },
         },
         { new: true }
       );
+      console.log(updateSavedAnimalList);
       return res.status(200).json(updateSavedAnimalList);
     } catch (e) {
       return res.status(500).json(e);
