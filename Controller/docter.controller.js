@@ -164,12 +164,26 @@ module.exports = {
         },
         { new: true }
       );
-      console.log(updateSavedAnimalList);
       return res.status(200).json(updateSavedAnimalList);
     } catch (e) {
       return res.status(500).json(e);
     }
     //use animal id and then provide the help to the animal and the animal status so that user could also see that help is provided to the animal or not
+  },
+  getPetPatientDetails: async (req, res) => {
+    const docId = req.query.docId;
+    const CurrentDoctor = await Docter.findById(docId);
+    const PatientId = CurrentDoctor.PatientPetId;
+    if (PatientId) {
+      try {
+        const PatientData = await Pet.findById(PatientId);
+        return res.status(200).json(PatientData);
+      } catch (err) {
+        return res.status(500).json(err);
+      }
+    } else {
+      return res.status(500).json({ Message: "No Patient is assigned to you" });
+    }
   },
   updatePetHealthCard: async (req, res) => {
     const docId = req.query.id;

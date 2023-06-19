@@ -617,10 +617,7 @@
                 "DocterPassword": {
                   "example": "any"
                 },
-                "DocterNumber": {
-                  "example": "any"
-                },
-                "DocterAddress": {
+                "Address": {
                   "example": "any"
                 }
               }
@@ -709,6 +706,26 @@
         }
       }
     },
+    "/getPatient": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "docId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/updateHealth": {
       "post": {
         "description": "",
@@ -737,7 +754,7 @@
         }
       }
     },
-    "/getPatient": {
+    "/petCheckup": {
       "get": {
         "description": "",
         "parameters": [
