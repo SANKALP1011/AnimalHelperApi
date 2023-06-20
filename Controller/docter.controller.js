@@ -187,7 +187,6 @@ module.exports = {
   },
   updatePetHealthCard: async (req, res) => {
     const docId = req.query.id;
-    const userId = req.query.uId;
     const CurrentDoc = await Docter.findById(docId);
     console.log(CurrentDoc);
     const HealthData = req.body;
