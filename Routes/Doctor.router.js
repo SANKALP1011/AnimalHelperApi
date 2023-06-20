@@ -19,7 +19,7 @@ DocterRouter.get("/nearByAnimal", nearbyAnimal);
 DocterRouter.post("/animalHelp", provideAnimalHelp);
 DocterRouter.get("/getPatient", getPetPatientDetails);
 DocterRouter.post("/updateHealth", updatePetHealthCard);
-DocterRouter.get("/petCheckup", userPetCheckup);
+DocterRouter.post("/petCheckup", userPetCheckup);
 DocterRouter.post("/vaccinateStray", vaccinateStrayAnimals);
 DocterRouter.get("/getAllDoctors", getDoctors);
 DocterRouter.get("/getDoctorById", getDoctorsDetailsById);
