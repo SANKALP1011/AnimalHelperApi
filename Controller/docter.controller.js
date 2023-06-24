@@ -247,6 +247,14 @@ module.exports = {
       });
     }
   },
+  getStrayList: async (req, res) => {
+    try {
+      const strayData = await Stray.find();
+      return res.status(200).json(strayData);
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
   vaccinateStrayAnimals: async (req, res) => {
     const docId = req.query.id;
     const staryId = req.query.stId;

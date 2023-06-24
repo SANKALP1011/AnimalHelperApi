@@ -11,6 +11,7 @@ const {
   getDoctors,
   getDoctorsDetailsById,
   getPetPatientDetails,
+  getStrayList,
 } = require("../Controller/docter.controller");
 
 DocterRouter.post("/docterSignUp", DocterSignUp);
@@ -23,4 +24,5 @@ DocterRouter.post("/petCheckup", userPetCheckup);
 DocterRouter.post("/vaccinateStray", vaccinateStrayAnimals);
 DocterRouter.get("/getAllDoctors", getDoctors);
 DocterRouter.get("/getDoctorById", getDoctorsDetailsById);
+DocterRouter.get("/strayList", getStrayList);
 module.exports = DocterRouter;
