@@ -256,20 +256,26 @@ module.exports = {
     }
   },
   vaccinateStrayAnimals: async (req, res) => {
-    const docId = req.query.id;
-    const staryId = req.query.stId;
-    const CurrentDoc = await Docter.findById(docId);
-    const stray = await Stray.findById(staryId);
     try {
+      const docId = req.query.id;
+      const strayId = req.query.stId;
+      const CurrentDoc = await Docter.findById(docId);
+      const stray = await Stray.findById(strayId);
+
+      if (!CurrentDoc || !stray) {
+        return res.status(404).json({ error: "Invalid doctor or stray ID." });
+      }
+
       const docData = {
         DocName: CurrentDoc.DocterName,
         DocNo: CurrentDoc.DocterNumber,
-        DocterLocation: CurrentDoc.DocterLocation.formattedAddress,
       };
+
       console.log(docData);
+
       if (!stray.isVaccinated) {
         await Stray.findByIdAndUpdate(
-          staryId,
+          strayId,
           {
             $set: {
               isVaccinated: true,
@@ -278,37 +284,39 @@ module.exports = {
           },
           { new: true }
         );
-        const updatedData = await Stray.findById(staryId);
-        stray.NgoDetails.forEach(async (value) => {
-          const id = value.NgoId.toHexString();
-          await Ngo.findByIdAndUpdate(
-            id,
-            {
-              $push: {
-                VaccinatedAnimals: updatedData,
+
+        const updatedData = await Stray.findById(strayId);
+
+        await Promise.all(
+          stray.NgoDetails.map(async (value) => {
+            const id = value.NgoId.toHexString();
+            await Ngo.findByIdAndUpdate(
+              id,
+              {
+                $push: {
+                  VaccinatedAnimals: updatedData,
+                },
               },
-            },
-            { new: true }
-          );
-        });
+              { new: true }
+            );
+          })
+        );
+
         return res.status(200).json({
-          Message:
-            "Stray animal with the name " +
-            stray.StrayName +
-            " is vaccinated and safe now.",
+          Message: `Stray animal with the name ${stray.StrayName} is vaccinated and safe now.`,
         });
       } else {
         console.log(stray);
         console.log(stray.isVaccinated);
         return res.status(500).json({
-          Message:
-            "Stray animal with the name " +
-            stray.StrayName +
-            " is already vaccinated and safe.",
+          Message: `Stray animal with the name ${stray.StrayName} is already vaccinated and safe.`,
         });
       }
-    } catch (e) {
-      return res.status(500).json(e);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        error: "An error occurred while vaccinating the stray animal.",
+      });
     }
   },
 };
