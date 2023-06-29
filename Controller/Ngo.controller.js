@@ -100,11 +100,9 @@ module.exports = {
   },
   getListOfAnimals: async (req, res) => {
     const ngoId = req.query.id;
-    const CurrentNgo = await Ngo.findById(ngoId);
     try {
-      CurrentNgo.StrayAnimalList.forEach((data) => {
-        return res.status(200).json(data);
-      });
+      const CurrentNgo = await Ngo.findById(ngoId);
+      return res.status(200).json(CurrentNgo.StrayAnimalList);
     } catch (e) {
       return res.status(500).json(e);
     }
